@@ -25,6 +25,9 @@ var config = {
     }, {
       test: /\.less$/,
       loader: 'style!css!less'
+    }, {
+      test: /\.(png|jpg)$/,
+      loader: 'url?limit=50000'
     }]
   },
   plugins: [

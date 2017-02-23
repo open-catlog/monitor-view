@@ -56,7 +56,7 @@ class SiderBar extends React.Component {
           value.currentTitle = true;
         } else {
           value.listShow = false;
-          value.current = false;
+          value.currentTitle = false;
           if (value.list) {
             value.list.forEach(tempListData => {
               tempListData.current = false;
@@ -99,9 +99,10 @@ class SiderBar extends React.Component {
 
     siderBarProps.forEach((data, index) => {
       if (data.list) {
-        let collapseNode = <Icon type={data.listShow ? 'up' : 'down'}></Icon>
+        let collapseNode = <Icon className="collapse" type={data.listShow ? 'up' : 'down'}></Icon>
         siderBarNode.push(
-          <li key={index} onClick={() => this.setListShow(data, index)}>
+          <li key={index} className={data.currentTitle ? "list-title title-active" : "list-title"} 
+              onClick={() => this.setListShow(data, index)}>
           <Icon type={data.listIcon}/>{data.listTitle}
           {collapseNode}
           </li>
@@ -111,18 +112,23 @@ class SiderBar extends React.Component {
           if (data.listShow) {
             if (dataList.current) {
               siderBarNode.push(
-                <li key={index + '-' + key}>{dataList.pageName}</li>
+                <li key={index + '-' + key} className="active list-node">
+                  {dataList.pageName}
+                </li>
               )
             } else {
               siderBarNode.push(
-                <li key={index + '-' + key} onClick={() => this.setCurrent(index, key, dataList.pageUrl)}>{dataList.pageName}</li>
+                <li key={index + '-' + key} className="list-node" onClick={() => this.setCurrent(index, key, dataList.pageUrl)}>
+                  {dataList.pageName}
+                </li>
               );
             }
           }
         });     
       } else if (data.pageUrl) {
         siderBarNode.push(
-          <li key={index} onClick={() => this.setListShow(data, index)}>
+          <li key={index} className={data.currentTitle ? "list-title title-active" : "list-title"} 
+              onClick={() => this.setListShow(data, index)}>
             <Icon type={data.listIcon}/>{data.listTitle}
           </li>
         );

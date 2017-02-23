@@ -1,16 +1,50 @@
 .sider {
   float: left;
-  width: 20%;
+  width: 15%;
   height: 100%;
-  background-color: #1C2B36;
-  overflow-y: scroll;
+  background-color: rgba(0,0,0,.5);
+  overflow-y: hidden;
   padding-top: 80px;
   li {
     width: 100%;
-    height: 37px;
+    height: 42px;
     padding: 0 12px;
+    letter-spacing: 1px;
     font-size: 15px;
-    color: #ced3cd;
-    font: normal 15px/55px 'Arial';
+    font: normal 15px/42px 'Arial';
+    color: #FFFFFF;
+    cursor: pointer;
+    transition: all 0.3s;
+    &:hover {
+      color: #209e91;
+    }
+    &.list-title {
+      position: relative;
+      padding-left: 16px;
+    }
+    &.title-active {
+      background-color: #209e91;
+      &:hover {
+        color: #FFFFFF;
+      }
+    }
+    &.active {
+      background-color: #209e91;
+      &:hover {
+        color: #FFFFFF;
+      }
+    }
+    &.list-node {
+      padding-left: 44px;
+    }
+    .collapse {
+      position: absolute;
+      top: 35%;
+      right: 10px;
+    }
   }
+}
+
+.anticon {
+  margin-right: 8px;
 }
