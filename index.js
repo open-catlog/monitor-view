@@ -28,12 +28,10 @@ const routes = {
     });
   },
   getChildRoutes(history, callback) {
-    if (history.location.pathname === '/test1' || history.location.pathname === '/test2' || history.location.pathname === '/test3') {
+    if (history.location.pathname === '/cpu') {
       require.ensure([], function (require) {
         callback(null, [
-          require('./src/pages/test1/index').default,
-          require('./src/pages/test2/index').default,
-          require('./src/pages/test3/index').default
+          require('./src/pages/cpu/index').default
         ]);
       });
     }

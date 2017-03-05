@@ -61,7 +61,7 @@ class SiderBar extends React.Component {
             value.list.forEach(tempListData => {
               tempListData.current = false;
             });
-          }        
+          } 
         }
       });
       this.setState(tempState, () => {

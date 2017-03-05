@@ -3,22 +3,34 @@ let locationProps = [{
   listIcon: 'home',
   pageUrl: '/'
 }, {
-  listTitle: 'test',
-  listIcon: 'team',
+  listTitle: '基础设施',
+  listIcon: 'hdd',
   list: [{
-    pageName: 'test1',
-    pageUrl: '/test1'
+    pageName: 'CPU',
+    pageUrl: '/cpu'
   }, {
-    pageName: 'test2',
-    pageUrl: '/test2'
+    pageName: '内存',
+    pageUrl: '/memory'
   }, {
-    pageName: 'test3',
-    pageUrl: '/test3'
+    pageName: '进程数',
+    pageUrl: '/thread'
+  }, {
+    pageName: 'IO',
+    pageUrl: '/io'
+  }, {
+    pageName: '硬盘',
+    pageUrl: '/disk'
+  }, {
+    pageName: '网络',
+    pageUrl: '/network'
   }]
 }, {
-    listTitle: 'dafeng',
-    listIcon: 'github',
-    pageUrl: '/dafeng'
+    listTitle: '平台信息',
+    listIcon: 'bulb',
+    list: [{
+      pageName: 'Tomcat',
+      pageUrl: '/tomcat'
+    }]
 }];
 
 export default locationProps;
