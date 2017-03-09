@@ -16,10 +16,10 @@ class PageContent extends React.Component {
 
   renderChart = result => {
     if (result) {
-      let cpuChart = echarts.init(document.getElementById('cpu-chart'));
-      cpuChart.setOption({
+      let processChart = echarts.init(document.getElementById('process-chart'));
+      processChart.setOption({
         title: {
-          text: 'CPU利用率',
+          text: '进程数',
           textStyle: {
             color: '#F0FFF0'
           }
@@ -71,7 +71,7 @@ class PageContent extends React.Component {
           }
         },
         series: [{
-          name: 'CPU',
+          name: '线程数',
           type: 'line',
           itemStyle: {
             normal: {
@@ -84,10 +84,11 @@ class PageContent extends React.Component {
             }
           },
           data: result.data.map(data => {
-            return data.utilization;
+            return data.processCount;
           })
         }],
       });
+      this.setState(tempState);
     }
   };
 
@@ -98,7 +99,7 @@ class PageContent extends React.Component {
       context: _self,
       url: 'http://localhost:6789/iaas/getInfo',
       data: {
-        type: 'cpu',
+        type: 'process',
         seconds: 300,
         server: '192.168.0.127'
       },
@@ -116,14 +117,14 @@ class PageContent extends React.Component {
   render() {
     return (
       <div className="main-content">
-        <div id="cpu-chart"></div>
+        <div id="process-chart"></div>
       </div>
     );
   }
 }
 
 let route = {
-  path: 'cpu',
+  path: 'process',
   component: PageContent
 }
 

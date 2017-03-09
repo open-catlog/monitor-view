@@ -13,7 +13,7 @@ let locationProps = [{
     pageUrl: '/memory'
   }, {
     pageName: '进程数',
-    pageUrl: '/thread'
+    pageUrl: '/process'
   }, {
     pageName: 'IO',
     pageUrl: '/io'

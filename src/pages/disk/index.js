@@ -16,10 +16,28 @@ class PageContent extends React.Component {
 
   renderChart = result => {
     if (result) {
-      let cpuChart = echarts.init(document.getElementById('cpu-chart'));
-      cpuChart.setOption({
+      //获取y轴取值
+      let seriesData = {};
+      result.data.forEach(data => {
+        if (!seriesData[data.mount]) {
+          seriesData[data.mount] = [];
+        }
+        seriesData[data.mount].push(data.used);
+      });
+      //获取x轴取值
+      let benchmark = result.data[0].mount;
+      let xAxisData = [];
+      result.data.forEach(data => {
+        if (data.mount === benchmark) {
+          let momentTime = moment(data.time);
+          xAxisData.push(momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds());
+        }
+      });
+
+      let diskChart = echarts.init(document.getElementById('disk-chart'));
+      diskChart.setOption({
         title: {
-          text: 'CPU利用率',
+          text: '磁盘占用',
           textStyle: {
             color: '#F0FFF0'
           }
@@ -48,10 +66,7 @@ class PageContent extends React.Component {
               width: 2.5
             }
           },
-          data: result.data.map(data => {
-            let momentTime = moment(data.time);
-            return momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
-          })
+          data: xAxisData
         },
         yAxis: {
           type: 'value',
@@ -70,23 +85,23 @@ class PageContent extends React.Component {
             }
           }
         },
-        series: [{
-          name: 'CPU',
-          type: 'line',
-          itemStyle: {
-            normal: {
-              width: 2,
-              color: '#B8860B',
-              shadowColor: 'rgba(0,0,0,0.5)',
-              shadowBlur: 10,
-              shadowOffsetX: 8,
-              shadowOffsetY: 8
-            }
-          },
-          data: result.data.map(data => {
-            return data.utilization;
-          })
-        }],
+        series: Object.keys(seriesData).map(mount => {
+          return {
+            name: '挂载点:' + mount + ', 占用比例',
+            type: 'line',
+            itemStyle: {
+              normal: {
+                width: 2,
+                color: '#B8860B',
+                shadowColor: 'rgba(0,0,0,0.5)',
+                shadowBlur: 10,
+                shadowOffsetX: 8,
+                shadowOffsetY: 8
+              }
+            },
+            data: seriesData[mount]
+          };
+        })
       });
     }
   };
@@ -98,7 +113,7 @@ class PageContent extends React.Component {
       context: _self,
       url: 'http://localhost:6789/iaas/getInfo',
       data: {
-        type: 'cpu',
+        type: 'disk',
         seconds: 300,
         server: '192.168.0.127'
       },
@@ -116,14 +131,14 @@ class PageContent extends React.Component {
   render() {
     return (
       <div className="main-content">
-        <div id="cpu-chart"></div>
+        <div id="disk-chart"></div>
       </div>
     );
   }
 }
 
 let route = {
-  path: 'cpu',
+  path: 'disk',
   component: PageContent
 }
 

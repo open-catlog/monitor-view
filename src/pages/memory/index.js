@@ -16,10 +16,10 @@ class PageContent extends React.Component {
 
   renderChart = result => {
     if (result) {
-      let cpuChart = echarts.init(document.getElementById('cpu-chart'));
-      cpuChart.setOption({
+      let memoryChart = echarts.init(document.getElementById('memory-chart'));
+      memoryChart.setOption({
         title: {
-          text: 'CPU利用率',
+          text: '内存使用',
           textStyle: {
             color: '#F0FFF0'
           }
@@ -71,7 +71,7 @@ class PageContent extends React.Component {
           }
         },
         series: [{
-          name: 'CPU',
+          name: '内存空闲',
           type: 'line',
           itemStyle: {
             normal: {
@@ -84,10 +84,27 @@ class PageContent extends React.Component {
             }
           },
           data: result.data.map(data => {
-            return data.utilization;
+            return data.memory;
+          })
+        }, {
+          name: '交换空间空闲',
+          type: 'line',
+          itemStyle: {
+            normal: {
+              width: 2,
+              color: '#B8860B',
+              shadowColor: 'rgba(0,0,0,0.5)',
+              shadowBlur: 10,
+              shadowOffsetX: 8,
+              shadowOffsetY: 8
+            }
+          },
+          data: result.data.map(data => {
+            return data.swap;
           })
         }],
       });
+      this.setState(tempState);
     }
   };
 
@@ -98,7 +115,7 @@ class PageContent extends React.Component {
       context: _self,
       url: 'http://localhost:6789/iaas/getInfo',
       data: {
-        type: 'cpu',
+        type: 'memory',
         seconds: 300,
         server: '192.168.0.127'
       },
@@ -116,14 +133,14 @@ class PageContent extends React.Component {
   render() {
     return (
       <div className="main-content">
-        <div id="cpu-chart"></div>
+        <div id="memory-chart"></div>
       </div>
     );
   }
 }
 
 let route = {
-  path: 'cpu',
+  path: 'memory',
   component: PageContent
 }
 
