@@ -1,149 +1,85 @@
 import React from 'react';
-import {Icon} from 'antd';
-import {hashHistory} from 'react-router';
+import { Menu, Icon } from 'antd';
+import { hashHistory, Link } from 'react-router';
 
 import location from '../../conf/location';
 
 import './style';
 
+const SubMenu = Menu.SubMenu;
+
 class SiderBar extends React.Component {
   constructor(props) {
     super(props);
-    
-    let navigation = location;
-    let currentUrl = this.props.pathName;
-
-    navigation.forEach(data => {
-      data.listShow = false;
-      data.currentTitle = false;
-      if (data.list) {
-        data.list.forEach((dataList) => {
-          dataList.current = false;
-          if (dataList.pageUrl === currentUrl) {
-            dataList.listShow = true;
-            data.currentTitle = true;
-            dataList.current = true;
-          }
-        });
-      } else if(data.pageUrl) {
-        if (data.pageUrl === currentUrl) {
-          data.currentTitle = true;
-        }
-      }
-    });
-
     this.state = {
-      navigation: navigation
+      navigation: location,
+      current: '1',
+      openKeys: []
     };
-  }
+  };
 
-  setListShow = (data, index) => {
-    let tempState = Object.assign({}, this.state);
-    let tempListShow = tempState.navigation[index].listShow;
-    if (tempState.navigation[index].list) {
-      tempState.navigation.forEach((value, key) => {
-        if (index === key) {
-          value.listShow = !tempListShow;
-        } else {
-          value.listShow = false;
-        }
-      });
-      this.setState(tempState);
-    } else {
-      tempState.navigation.forEach((value, key) => {
-        if (index === key) {
-          value.listShow = !tempListShow;
-          value.currentTitle = true;
-        } else {
-          value.listShow = false;
-          value.currentTitle = false;
-          if (value.list) {
-            value.list.forEach(tempListData => {
-              tempListData.current = false;
-            });
-          } 
-        }
-      });
-      this.setState(tempState, () => {
-        hashHistory.push(tempState.navigation[index].pageUrl);
-      });
+  handleClick = (e) => {
+    this.setState({ current: e.key });
+  };
+
+  onOpenChange = (openKeys) => {
+    const state = this.state;
+    const latestOpenKey = openKeys.find(key => !(state.openKeys.indexOf(key) > -1));
+    const latestCloseKey = state.openKeys.find(key => !(openKeys.indexOf(key) > -1));
+
+    let nextOpenKeys = [];
+    if (latestOpenKey) {
+      nextOpenKeys = this.getAncestorKeys(latestOpenKey).concat(latestOpenKey);
     }
-  }
+    if (latestCloseKey) {
+      nextOpenKeys = this.getAncestorKeys(latestCloseKey);
+    }
+    this.setState({ openKeys: nextOpenKeys });
+  };
 
-  setCurrent = (titleIndex, listIndex, url) => {
-    let tempState = Object.assign({}, this.state);
-    tempState.navigation.forEach((data, index) => {
-      if (index == titleIndex) {
-        data.listShow = true;
-        data.currentTitle = true;
-        data.list.forEach((tempListData, tempListIndex) => {
-          tempListData.current = tempListIndex === listIndex;
-        });
-      } else {
-        data.listShow = false;
-        data.currentTitle = false;
-        if (data.list) {
-          data.list.forEach((tempListData) => {
-            tempListData.current = false;
-          })
-        }
-      }
-    });
-    this.setState(tempState, () => {
-      hashHistory.push(url);
-    })
-  }
-
-  renderSiderBar = (siderBarProps) => {
-    let siderBarNode = [];
-
-    siderBarProps.forEach((data, index) => {
-      if (data.list) {
-        let collapseNode = <Icon className="collapse" type={data.listShow ? 'up' : 'down'}></Icon>
-        siderBarNode.push(
-          <li key={index} className={data.currentTitle ? "list-title title-active" : "list-title"} 
-              onClick={() => this.setListShow(data, index)}>
-          <Icon type={data.listIcon}/>{data.listTitle}
-          {collapseNode}
-          </li>
-        );
-
-        data.list.forEach((dataList, key) => {
-          if (data.listShow) {
-            if (dataList.current) {
-              siderBarNode.push(
-                <li key={index + '-' + key} className="active list-node">
-                  {dataList.pageName}
-                </li>
-              )
-            } else {
-              siderBarNode.push(
-                <li key={index + '-' + key} className="list-node" onClick={() => this.setCurrent(index, key, dataList.pageUrl)}>
-                  {dataList.pageName}
-                </li>
-              );
-            }
-          }
-        });     
-      } else if (data.pageUrl) {
-        siderBarNode.push(
-          <li key={index} className={data.currentTitle ? "list-title title-active" : "list-title"} 
-              onClick={() => this.setListShow(data, index)}>
-            <Icon type={data.listIcon}/>{data.listTitle}
-          </li>
-        );
-      }
-    });
-
-    return siderBarNode;
-  }
+  getAncestorKeys = (key) => {
+    const map = {
+      sub3: ['sub2'],
+    };
+    return map[key] || [];
+  };
 
   render() {
     let siderBarProps = this.state.navigation;
+    let index = 1;
+    let subIndex = 3;
     return (
-      <ul className="sider">
-        {this.renderSiderBar(siderBarProps)}
-      </ul>
+      <Menu
+        className="sider"
+        theme="dark"
+        mode="inline"
+        onClick={this.handleClick}
+      >
+        <Menu.Item key="1">
+          <Link to="/"><span>
+            <Icon type="home" />
+            <span>首页</span>
+          </span></Link>
+        </Menu.Item>
+        <Menu.Item key="2">
+          <Link to="/hardware"><span>
+            <Icon type="hdd" />
+            <span>基础设施</span>
+          </span></Link>
+        </Menu.Item>
+        {siderBarProps.map(menu => {
+          return (
+            <SubMenu key={"sub" + (index++)} title={<span><Icon type={menu.listIcon} /><span>{menu.listTitle}</span></span>}>
+              {
+                menu.list ?
+                  menu.list.map(subMenu => {
+                    return <Menu.Item key={(subIndex++) + ""}><Link to={subMenu.pageUrl}>{subMenu.pageName}</Link></Menu.Item>
+                  }) : null
+              }
+            </SubMenu>
+          );
+        })}
+      </Menu>
     );
   }
 }

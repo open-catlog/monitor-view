@@ -1,43 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, hashHistory } from 'react-router';
+import { Layout } from 'antd';
 
 import SiderBar from './src/global/layout/SiderBar/index';
-import Header from './src/global/layout/Header/index';
+import CustomHeader from './src/global/layout/Header/index';
+
+const { Header, Content, Sider } = Layout;
 
 import './src/global/less/global';
 
-export default class Layout extends React.Component {
+export default class CustomLayout extends React.Component {
   render() {
     return (
-      <div className="layout">
-        <Header />
-        <SiderBar pathName={this.props.location.pathname} />
-        {this.props.children}
-      </div>
+      <Layout>
+        <Header>
+          <CustomHeader />
+        </Header>
+        <Layout>
+          <Sider><SiderBar /></Sider>
+          <Content className="main-content">{this.props.children}</Content>
+        </Layout>
+      </Layout>
     );
   }
 }
 
 const routes = {
   path: '/',
-  component: Layout,
+  component: CustomLayout,
   getIndexRoute(history, callback) {
     require.ensure([], function (require) {
       callback(null, require('./src/pages/default/index').default);
     });
   },
   getChildRoutes(history, callback) {
-    if (history.location.pathname === '/cpu' || history.location.pathname === '/process' || history.location.pathname === '/disk'
-      || history.location.pathname === '/memory' || history.location.pathname === '/io' || history.location.pathname === '/network') {
+    if (history.location.pathname === '/hardware') {
       require.ensure([], function (require) {
         callback(null, [
-          require('./src/pages/cpu/index').default,
-          require('./src/pages/process/index').default,
-          require('./src/pages/disk/index').default,
-          require('./src/pages/memory/index').default,
-          require('./src/pages/io/index').default,
-          require('./src/pages/network/index').default
+          require('./src/pages/hardware/index').default
         ]);
       });
     }
