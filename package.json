@@ -4,7 +4,7 @@
   "description": "monitor-view",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dev-server --hot --inline --history-api-fallback --progress"
+    "dev": "webpack-dev-server --hot --port=3456 --inline --history-api-fallback --progress"
   },
   "author": "zhuyali",
   "license": "MIT",
@@ -19,7 +19,6 @@
     "babel-preset-stage-1": "^6.16.0",
     "css-loader": "^0.26.1",
     "echarts": "^3.4.0",
-    "echarts-for-react": "^1.1.6",
     "file-loader": "^0.10.0",
     "less": "^2.7.2",
     "less-loader": "^2.2.3",

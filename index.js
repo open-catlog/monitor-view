@@ -19,7 +19,7 @@ export default class CustomLayout extends React.Component {
         </Header>
         <Layout>
           <Sider><SiderBar /></Sider>
-          <Content className="main-content">{this.props.children}</Content>
+          <Content>{this.props.children}</Content>
         </Layout>
       </Layout>
     );
@@ -39,6 +39,12 @@ const routes = {
       require.ensure([], function (require) {
         callback(null, [
           require('./src/pages/hardware/index').default
+        ]);
+      });
+    } else if (history.location.pathname === '/tomcat') {
+      require.ensure([], function (require) {
+        callback(null, [
+          require('./src/pages/tomcat/index').default
         ]);
       });
     }

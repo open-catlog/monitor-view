@@ -6,75 +6,10 @@ import { message, Select, Row, Col } from 'antd';
 const Option = Select.Option;
 
 import { getRequest } from '../../../utils/httpClient';
+import { option, series } from '../../../src/global/common/chartOption';
 
 import './style';
 
-const option = {
-  backgroundColor: 'rgba(0,0,0,.2)',
-  title: {
-    fontWeight: 'bolder',
-    textStyle: {
-      color: '#F0FFF0'
-    }
-  },
-  tooltip: {
-    trigger: 'axis',
-    showDelay: 20,
-    hideDelay: 100,
-    transitionDuration: 0.4
-  },
-  xAxis: {
-    type: 'category',
-    boundaryGap: false,
-    splitLine: {
-      show: false
-    },
-    axisLabel: {
-      show: true,
-      textStyle: {
-        color: '#F0FFF0',
-        fontWeight: 'bolder'
-      }
-    },
-    axisLine: {
-      lineStyle: {
-        color: 'rgba(0,0,0,.2)'
-      }
-    },
-    data: []
-  },
-  yAxis: {
-    type: 'value',
-    splitLine: {
-      show: false
-    },
-    axisLabel: {
-      textStyle: {
-        color: '#F0FFF0'
-      },
-      fontWeight: 'bolder'
-    },
-    axisLine: {
-      lineStyle: {
-        color: 'rgba(0,0,0,.2)',
-      }
-    }
-  },
-  series: []
-};
-const series = {
-  type: 'line',
-  itemStyle: {
-    normal: {
-      color: '#B8860B',
-      shadowColor: 'rgba(0,0,0,0.5)',
-      shadowBlur: 10,
-      shadowOffsetX: 8,
-      shadowOffsetY: 8
-    }
-  },
-  data: []
-};
 const points = ['cpu', 'process', 'memory', 'io', 'network', 'disk'];
 
 class PageContent extends React.Component {
@@ -87,6 +22,7 @@ class PageContent extends React.Component {
   };
 
   renderChart = (result, type) => {
+    option.series = [];
     if (result.success && result.data.length) {
       let chart;
       let tempOption;
@@ -96,7 +32,7 @@ class PageContent extends React.Component {
           tempOption = Object.assign({}, option);
           tempSeries = Object.assign({}, series);
           chart = echarts.init(document.getElementById('cpu-chart'));
-          tempOption.title.text = 'CPU 利用率';
+          tempOption.title.text = 'CPU Utilization';
           tempOption.xAxis.data = result.data.map(data => {
             let momentTime = moment(data.time);
             return momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
@@ -112,7 +48,7 @@ class PageContent extends React.Component {
           tempOption = Object.assign({}, option);
           tempSeries = Object.assign({}, series);
           chart = echarts.init(document.getElementById('process-chart'));
-          tempOption.title.text = '进程数';
+          tempOption.title.text = 'Process Count';
           tempOption.xAxis.data = result.data.map(data => {
             let momentTime = moment(data.time);
             return momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
@@ -120,7 +56,7 @@ class PageContent extends React.Component {
           tempSeries.data = result.data.map(data => {
             return data.processCount;
           });
-          tempSeries.name = "线程数";
+          tempSeries.name = "count";
           tempOption.series = tempSeries;
           chart.setOption(tempOption);
           break;
@@ -143,10 +79,10 @@ class PageContent extends React.Component {
             }
           });
           tempOption.xAxis.data = xAxisData;
-          tempOption.title.text = '磁盘占用';
+          tempOption.title.text = 'Disk Utilization';
           tempOption.series = Object.keys(seriesData).map(mount => {
             tempSeries = Object.assign({}, series);
-            tempSeries.name = '挂载点:' + mount + ', 占用比例';
+            tempSeries.name = 'Mount Point:' + mount + ', Proportion';
             tempSeries.data = seriesData[mount];
             return tempSeries;
           });
@@ -155,14 +91,14 @@ class PageContent extends React.Component {
         case 'memory':
           tempOption = Object.assign({}, option);
           chart = echarts.init(document.getElementById('memory-chart'));
-          tempOption.title.text = '内存使用';
+          tempOption.title.text = 'Memory Utilization';
           tempOption.xAxis.data = result.data.map(data => {
             let momentTime = moment(data.time);
             return momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
           });
           for (let i = 0; i < 2; i++) {
             tempSeries = Object.assign({}, series);
-            tempSeries.name = "";
+            tempSeries.name = i === 0 ? "Memory" : "Swap Space";
             tempSeries.data = result.data.map(data => {
               return i === 0 ? data.memory : data.swap;
             });
@@ -174,7 +110,7 @@ class PageContent extends React.Component {
           for (let i = 0; i < 2; i++) {
             chart = echarts.init(document.getElementById(i === 0 ? 'network-read-chart' : 'network-send-chart'));
             tempOption = Object.assign({}, option);
-            tempOption.title.text = i === 0 ? '网络读取' : '网络发送';
+            tempOption.title.text = i === 0 ? 'Network-Read' : 'Network-Send';
             //获取y轴取值
             let seriesData = {};
             result.data.forEach(data => {
@@ -195,7 +131,7 @@ class PageContent extends React.Component {
             tempOption.xAxis.data = xAxisData;
             tempOption.series = Object.keys(seriesData).map(netCard => {
               tempSeries = Object.assign({}, series);
-              tempSeries.name = '网卡:' + netCard + (i === 0 ? ', 读取速度' : ', 发送速度');
+              tempSeries.name = 'NetCard:' + netCard + (i === 0 ? ', Read-Speed' : ', Send-Speed');
               tempSeries.data = seriesData[netCard].map(temp => {
                 return i === 0 ? temp.read : temp.send;
               });
@@ -208,7 +144,7 @@ class PageContent extends React.Component {
           for (let i = 0; i < 2; i++) {
             chart = echarts.init(document.getElementById(i === 0 ? 'io-read-chart' : 'io-write-chart'));
             tempOption = Object.assign({}, option);
-            tempOption.title.text = i === 0 ? 'IO读取' : 'IO写入';
+            tempOption.title.text = i === 0 ? 'IO-Read' : 'IO-Send';
             //获取y轴取值
             let seriesData = {};
             result.data.forEach(data => {
@@ -229,7 +165,7 @@ class PageContent extends React.Component {
             tempOption.xAxis.data = xAxisData;
             tempOption.series = Object.keys(seriesData).map(device => {
               tempSeries = Object.assign({}, series);
-              tempSeries.name = '设备:' + device + (i === 0 ? ', 读取速度' : ', 写入速度');
+              tempSeries.name = 'Device:' + device + (i === 0 ? ', Read-Speed' : ', Write-Speed');
               tempSeries.data = seriesData[device].map(temp => {
                 return i === 0 ? temp.read : temp.write;
               });
