@@ -229,28 +229,34 @@ class PageContent extends React.Component {
 
   render() {
     return (
-      <div className="main-content">
-        <Select defaultValue="请选择服务器" style={{ width: 120 }}
-          onChange={(value) => this.selectChange(value)}>
-          {this.state.servers.length ? this.state.servers.map((server, index) => {
-            return <Option value={server} key={index}>{server}</Option>
-          }) : null}
-        </Select>
-        <Row gutter={16}>
-          <Col span={12}><div id="cpu-chart" /></Col>
-          <Col span={12}><div id="process-chart" /></Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12}><div id="memory-chart" /></Col>
-          <Col span={12}><div id="disk-chart" /></Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12}><div id="network-read-chart" /></Col>
-          <Col span={12}><div id="network-send-chart" /></Col>
-        </Row>
-        <Row gutter={16}>
-          <Col span={12}><div id="io-read-chart" /></Col>
-          <Col span={12}><div id="io-write-chart" /></Col>
+      <div>
+        <Row type="flex" justify="center">
+          <Col span={22}>
+            <Select defaultValue="请选择服务器" style={{ width: 120 }}
+              onChange={(value) => this.selectChange(value)}>
+              {this.state.servers.length ? this.state.servers.map((server, index) => {
+                return <Option value={server} key={index}>{server}</Option>
+              }) : null}
+            </Select>
+            <div>
+              <Row gutter={16}>
+                <Col span={12}><div id="cpu-chart" /></Col>
+                <Col span={12}><div id="process-chart" /></Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}><div id="memory-chart" /></Col>
+                <Col span={12}><div id="disk-chart" /></Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}><div id="network-read-chart" /></Col>
+                <Col span={12}><div id="network-send-chart" /></Col>
+              </Row>
+              <Row gutter={16}>
+                <Col span={12}><div id="io-read-chart" /></Col>
+                <Col span={12}><div id="io-write-chart" /></Col>
+              </Row>
+            </div>
+          </Col>
         </Row>
       </div>
     );

@@ -33,6 +33,7 @@ class PageContent extends React.Component {
     tempState.uptime = data.upTime;
     data.sessionInfo.forEach(session => {
       if (tempState.sessions.indexOf(session.context) === -1) {
+        tempState.sessions = [];
         tempState.sessions.push(session.context);
       }
     });
@@ -103,7 +104,7 @@ class PageContent extends React.Component {
         sessionInfoSeries = Object.assign({}, series);
         sessionInfoSeries.name = i === 0 ? "activeSessions" : "sessionCounter";
         sessionInfoSeries.data = tempSessions.map(tempSession => {
-          return i === 0 ? tempSession.activeSessions : tempSession.sessionCounter ;
+          return i === 0 ? tempSession.activeSessions : tempSession.sessionCounter;
         });
         sessionInfoOption.series.push(sessionInfoSeries);
       }
@@ -159,46 +160,50 @@ class PageContent extends React.Component {
 
   render() {
     return (
-      <div className="main-content">
-        <Select defaultValue="请选择服务器" style={{ width: 120 }}
-          onChange={(value) => this.selectChange(value)}>
-          {this.state.servers.length ? this.state.servers.map((server, index) => {
-            return <Option value={server} key={index}>{server}</Option>
-          }) : null}
-        </Select>
-        <div className="antd-card">
-          <Row>
-            <Col span="6">
-              <Card title="startTime" bordered={false}>{this.state.startTime}</Card>
-            </Col>
-            <Col span="6">
-              <Card title="uptime" bordered={false}>{this.state.uptime}</Card>
-            </Col>
-            <Col span="6">
-              <Card title="maxThreads" bordered={false}>{this.state.maxThreads}</Card>
-            </Col>
-            <Col span="6">
-              <Card title="maxActiveSessions" bordered={false}>{this.state.maxActiveSessions}</Card>
-            </Col>
-          </Row>
-        </div>
-        <Row gutter={16}>
-          <Col span={12}><div id="tomcat-thread-chart" /></Col>
-          <Col span={12}><div id="tomcat-gc-chart" /></Col>
-        </Row>
-        {this.state.sessions.map((session, index) => {
-          if (index % 2 === 0) {
-            return (<Row gutter={16} key={index}>
-              {this.state.sessions.length - 1 === index ?
-                <Col span={12}><div id={"tomcat-session-" + index} style={{ width: "100%", height: "100%" }} /></Col> :
-                <div className="session-row">
-                  <Col span={12}><div id={"tomcat-session-" + index} style={{ width: "100%", height: "100%" }} /></Col>
-                  <Col span={12}><div id={"tomcat-session-" + (index + 1)} style={{ width: "100%", height: "100%" }} /></Col>
-                </div>
+      <div>
+        <Row type="flex" justify="center">
+          <Col span={22}>
+            <Select defaultValue="请选择服务器" style={{ width: 120 }}
+              onChange={(value) => this.selectChange(value)}>
+              {this.state.servers.length ? this.state.servers.map((server, index) => {
+                return <Option value={server} key={index}>{server}</Option>
+              }) : null}
+            </Select>
+            <div className="antd-card">
+              <Row>
+                <Col span="6">
+                  <Card title="startTime" bordered={false}>{this.state.startTime}</Card>
+                </Col>
+                <Col span="6">
+                  <Card title="uptime" bordered={false}>{this.state.uptime}</Card>
+                </Col>
+                <Col span="6">
+                  <Card title="maxThreads" bordered={false}>{this.state.maxThreads}</Card>
+                </Col>
+                <Col span="6">
+                  <Card title="maxActiveSessions" bordered={false}>{this.state.maxActiveSessions}</Card>
+                </Col>
+              </Row>
+            </div>
+            <Row gutter={16}>
+              <Col span={12}><div id="tomcat-thread-chart" /></Col>
+              <Col span={12}><div id="tomcat-gc-chart" /></Col>
+            </Row>
+            {this.state.sessions.map((session, index) => {
+              if (index % 2 === 0) {
+                return (<Row gutter={16} key={index}>
+                  {this.state.sessions.length - 1 === index ?
+                    <Col span={12}><div id={"tomcat-session-" + index} style={{ width: "100%", height: "100%" }} /></Col> :
+                    <div className="session-row">
+                      <Col span={12}><div id={"tomcat-session-" + index} style={{ width: "100%", height: "100%" }} /></Col>
+                      <Col span={12}><div id={"tomcat-session-" + (index + 1)} style={{ width: "100%", height: "100%" }} /></Col>
+                    </div>
+                  }
+                </Row>);
               }
-            </Row>);
-          }
-        })}
+            })}
+          </Col>
+        </Row>
       </div>
     );
   }
