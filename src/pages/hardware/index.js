@@ -40,7 +40,7 @@ class PageContent extends React.Component {
           tempSeries.data = result.data.map(data => {
             return data.utilization;
           });
-          tempSeries.name = "CPU";
+          tempSeries.name = 'CPU';
           tempOption.series = tempSeries;
           chart.setOption(tempOption);
           break;
@@ -56,7 +56,7 @@ class PageContent extends React.Component {
           tempSeries.data = result.data.map(data => {
             return data.processCount;
           });
-          tempSeries.name = "count";
+          tempSeries.name = 'count';
           tempOption.series = tempSeries;
           chart.setOption(tempOption);
           break;
@@ -98,7 +98,7 @@ class PageContent extends React.Component {
           });
           for (let i = 0; i < 2; i++) {
             tempSeries = Object.assign({}, series);
-            tempSeries.name = i === 0 ? "Memory" : "Swap Space";
+            tempSeries.name = i === 0 ? 'Memory' : 'Swap Space';
             tempSeries.data = result.data.map(data => {
               return i === 0 ? data.memory : data.swap;
             });
@@ -221,18 +221,15 @@ class PageContent extends React.Component {
   };
 
   selectChange = value => {
-    let tempState = Object.assign({}, this.state);
-    tempState.server = value;
-    this.setState(tempState);
     this.requestData(value);
   };
 
   render() {
     return (
       <div>
-        <Row type="flex" justify="center">
+        <Row type='flex' justify='center'>
           <Col span={22}>
-            <Select defaultValue="请选择服务器" style={{ width: 120 }}
+            <Select defaultValue='请选择服务器' style={{ width: 120 }}
               onChange={(value) => this.selectChange(value)}>
               {this.state.servers.length ? this.state.servers.map((server, index) => {
                 return <Option value={server} key={index}>{server}</Option>
@@ -240,20 +237,20 @@ class PageContent extends React.Component {
             </Select>
             <div>
               <Row gutter={16}>
-                <Col span={12}><div id="cpu-chart" /></Col>
-                <Col span={12}><div id="process-chart" /></Col>
+                <Col span={12}><div id='cpu-chart' /></Col>
+                <Col span={12}><div id='process-chart' /></Col>
               </Row>
               <Row gutter={16}>
-                <Col span={12}><div id="memory-chart" /></Col>
-                <Col span={12}><div id="disk-chart" /></Col>
+                <Col span={12}><div id='memory-chart' /></Col>
+                <Col span={12}><div id='disk-chart' /></Col>
               </Row>
               <Row gutter={16}>
-                <Col span={12}><div id="network-read-chart" /></Col>
-                <Col span={12}><div id="network-send-chart" /></Col>
+                <Col span={12}><div id='network-read-chart' /></Col>
+                <Col span={12}><div id='network-send-chart' /></Col>
               </Row>
               <Row gutter={16}>
-                <Col span={12}><div id="io-read-chart" /></Col>
-                <Col span={12}><div id="io-write-chart" /></Col>
+                <Col span={12}><div id='io-read-chart' /></Col>
+                <Col span={12}><div id='io-write-chart' /></Col>
               </Row>
             </div>
           </Col>

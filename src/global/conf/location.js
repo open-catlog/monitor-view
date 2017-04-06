@@ -4,6 +4,9 @@ let locationProps = [{
     list: [{
       pageName: 'Tomcat',
       pageUrl: '/tomcat'
+    }, {
+      pageName: 'Nginx',
+      pageUrl: '/nginx'
     }]
 }];
 

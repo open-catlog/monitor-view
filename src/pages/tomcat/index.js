@@ -52,7 +52,7 @@ class PageContent extends React.Component {
     });
     for (let i = 0; i < 2; i++) {
       threadInfoSeries = Object.assign({}, series);
-      threadInfoSeries.name = i === 0 ? "currentThreadCount" : "currentThreadBusy";
+      threadInfoSeries.name = i === 0 ? 'currentThreadCount' : 'currentThreadBusy';
       threadInfoSeries.data = data.threadInfo.map(data => {
         return i === 0 ? data.currentThreadCount : data.currentThreadsBusy;
       });
@@ -73,7 +73,7 @@ class PageContent extends React.Component {
     });
     for (let i = 0; i < 2; i++) {
       GCInfoSeries = Object.assign({}, series);
-      GCInfoSeries.name = i === 0 ? "collectionCount" : "collectionTime";
+      GCInfoSeries.name = i === 0 ? 'collectionCount' : 'collectionTime';
       GCInfoSeries.data = data.GCInfo.map(data => {
         return i === 0 ? data.collectionCount : data.collectionTime;
       });
@@ -102,7 +102,7 @@ class PageContent extends React.Component {
       });
       for (let i = 0; i < 2; i++) {
         sessionInfoSeries = Object.assign({}, series);
-        sessionInfoSeries.name = i === 0 ? "activeSessions" : "sessionCounter";
+        sessionInfoSeries.name = i === 0 ? 'activeSessions' : 'sessionCounter';
         sessionInfoSeries.data = tempSessions.map(tempSession => {
           return i === 0 ? tempSession.activeSessions : tempSession.sessionCounter;
         });
@@ -117,7 +117,7 @@ class PageContent extends React.Component {
 
     getRequest({
       context: _self,
-      url: 'http://localhost:6789/paas/getInfo',
+      url: 'http://localhost:6789/paas/getTomcatInfo',
       data: {
         seconds: 600,
         server: value
@@ -138,7 +138,7 @@ class PageContent extends React.Component {
     let tempState = Object.assign({}, this.state);
     getRequest({
       context: _self,
-      url: 'http://localhost:6789/paas/getServers',
+      url: 'http://localhost:6789/paas/getTomcatServers',
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
         if (responseResult.success) {
@@ -152,51 +152,48 @@ class PageContent extends React.Component {
   };
 
   selectChange = value => {
-    let tempState = Object.assign({}, this.state);
-    tempState.server = value;
-    this.setState(tempState);
     this.requestData(value);
   };
 
   render() {
     return (
       <div>
-        <Row type="flex" justify="center">
+        <Row type='flex' justify='center'>
           <Col span={22}>
-            <Select defaultValue="请选择服务器" style={{ width: 120 }}
+            <Select defaultValue='请选择服务器' style={{ width: 120 }}
               onChange={(value) => this.selectChange(value)}>
               {this.state.servers.length ? this.state.servers.map((server, index) => {
                 return <Option value={server} key={index}>{server}</Option>
               }) : null}
             </Select>
-            <div className="antd-card">
+            <div className='antd-card'>
               <Row>
-                <Col span="6">
-                  <Card title="startTime" bordered={false}>{this.state.startTime}</Card>
+                <Col span='6'>
+                  <Card title='startTime' bordered={false}>{this.state.startTime}</Card>
                 </Col>
-                <Col span="6">
-                  <Card title="uptime" bordered={false}>{this.state.uptime}</Card>
+                <Col span='6'>
+                  <Card title='uptime' bordered={false}>{this.state.uptime}</Card>
                 </Col>
-                <Col span="6">
-                  <Card title="maxThreads" bordered={false}>{this.state.maxThreads}</Card>
+                <Col span='6'>
+                  <Card title='maxThreads' bordered={false}>{this.state.maxThreads}</Card>
                 </Col>
-                <Col span="6">
-                  <Card title="maxActiveSessions" bordered={false}>{this.state.maxActiveSessions}</Card>
+                <Col span='6'>
+                  <Card title='maxActiveSessions' bordered={false}>{this.state.maxActiveSessions}</Card>
                 </Col>
               </Row>
             </div>
             <Row gutter={16}>
-              <Col span={12}><div id="tomcat-thread-chart" /></Col>
-              <Col span={12}><div id="tomcat-gc-chart" /></Col>
+              <Col span={12}><div id='tomcat-thread-chart' /></Col>
+              <Col span={12}><div id='tomcat-gc-chart' /></Col>
             </Row>
             {this.state.sessions.map((session, index) => {
               if (index % 2 === 0) {
                 return (<Row gutter={16} key={index}>
                   {this.state.sessions.length - 1 === index ?
-                    <Col span={12}><div id={"tomcat-session-" + index} style={{ width: "100%", height: "100%" }} /></Col> :
-                    <div className="session-row">
-                      <Col span={12}><div id={"tomcat-session-" + index} style={{ width: "100%", height: "100%" }} /></Col>
-                      <Col span={12}><div id={"tomcat-session-" + (index + 1)} style={{ width: "100%", height: "100%" }} /></Col>
+                    <Col span={12}><div id={'tomcat-session-' + index} style={{ width: '100%', height: '100%' }} /></Col> :
+                    <div className='session-row'>
+                      <Col span={12}><div id={'tomcat-session-' + index} style={{ width: '100%', height: '100%' }} /></Col>
+                      <Col span={12}><div id={'tomcat-session-' + (index + 1)} style={{ width: '100%', height: '100%' }} /></Col>
                     </div>
                   }
                 </Row>);

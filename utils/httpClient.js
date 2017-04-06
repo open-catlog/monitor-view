@@ -22,10 +22,3 @@ export function getRequest(reqObj) {
       }
     });
 }
-
-/**
- * POST Method
- */
-export function postRequest(reqObj) {
-  request.post()
-}
