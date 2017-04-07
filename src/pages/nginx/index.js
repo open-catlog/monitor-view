@@ -19,7 +19,9 @@ class PageContent extends React.Component {
       servers: [],
       tableData: [],
       tableVisible: true,
-      chartVisible: false
+      chartVisible: false,
+      defaultServer: '127.0.0.1',
+      currentServer: '127.0.0.1'
     };
   };
 
@@ -96,10 +98,12 @@ class PageContent extends React.Component {
         }
       }
     });
+    _self.requestData(this.state.defaultServer);
   };
 
   selectChange = value => {
     let tempState = Object.assign({}, this.state);
+    tempState.currentServer = value;
     tempState.tableData = [];
     tempState.tableVisible = true;
     tempState.chartVisible = false;
@@ -167,7 +171,7 @@ class PageContent extends React.Component {
         <Row type="flex" justify="center">
           <Col span={22}>
             <div>
-              <Select defaultValue="请选择服务器" style={{ width: 120 }}
+              <Select defaultValue={this.state.defaultServer} style={{ width: 120 }}
                 onSelect={(value) => this.selectChange(value)}>
                 {this.state.servers.length ? this.state.servers.map((server, index) => {
                   return <Option value={server} key={index}>{server}</Option>

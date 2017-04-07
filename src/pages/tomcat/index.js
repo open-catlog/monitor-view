@@ -20,7 +20,9 @@ class PageContent extends React.Component {
       maxThreads: null,
       startTime: '',
       uptime: '',
-      sessions: []
+      sessions: [],
+      defaultServer: '127.0.0.1',
+      currentServer: '127.0.0.1'
     };
   };
 
@@ -29,7 +31,7 @@ class PageContent extends React.Component {
     //renderCard
     tempState.maxActiveSessions = data.maxActiveSessions;
     tempState.maxThreads = data.maxThreads;
-    tempState.startTime = data.startTime;
+    tempState.startTime = moment.unix(data.startTime / 1000).format('YYYY-MM-DD HH:mm:ss');
     tempState.uptime = data.upTime;
     data.sessionInfo.forEach(session => {
       if (tempState.sessions.indexOf(session.context) === -1) {
@@ -87,7 +89,6 @@ class PageContent extends React.Component {
       let sessionInfoChart;
       let sessionInfoOption = Object.assign({}, option);
       let sessionInfoSeries;
-      console.log(session);
       let tempSessions = [];
       data.sessionInfo.forEach(data => {
         if (data.context === session) {
@@ -149,9 +150,21 @@ class PageContent extends React.Component {
         }
       }
     });
+    _self.requestData(this.state.defaultServer);
+  };
+
+  shouldComponentUpdate() {
+    let _self = this;
+    setInterval(function() {
+      _self.requestData(_self.state.currentServer);
+    }, 30 * 1000);
+    return true;
   };
 
   selectChange = value => {
+    let tempState = Object.assign({}, this.state);
+    tempState.currentServer = value;
+    this.setState(tempState);
     this.requestData(value);
   };
 
@@ -160,7 +173,7 @@ class PageContent extends React.Component {
       <div>
         <Row type='flex' justify='center'>
           <Col span={22}>
-            <Select defaultValue='请选择服务器' style={{ width: 120 }}
+            <Select defaultValue={this.state.defaultServer} style={{ width: 120 }}
               onChange={(value) => this.selectChange(value)}>
               {this.state.servers.length ? this.state.servers.map((server, index) => {
                 return <Option value={server} key={index}>{server}</Option>

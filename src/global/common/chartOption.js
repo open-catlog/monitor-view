@@ -58,7 +58,6 @@ exports.series = {
   type: 'line',
   itemStyle: {
     normal: {
-      color: '#B8860B',
       shadowColor: 'rgba(0,0,0,0.5)',
       shadowBlur: 10,
       shadowOffsetX: 8,

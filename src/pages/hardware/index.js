@@ -17,7 +17,9 @@ class PageContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      servers: []
+      servers: [],
+      defaultServer: '192.168.0.128',
+      currentServer: '192.168.0.128'
     };
   };
 
@@ -218,9 +220,21 @@ class PageContent extends React.Component {
         }
       }
     });
+    _self.requestData(this.state.defaultServer);
+  };
+
+  shouldComponentUpdate() {
+    let _self = this;
+    setInterval(function () {
+      _self.requestData(_self.state.currentServer);
+    }, 30 * 1000);
+    return true;
   };
 
   selectChange = value => {
+    let tempState = Object.assign({}, this.state);
+    tempState.currentServer = value;
+    this.setState(tempState);
     this.requestData(value);
   };
 
@@ -229,7 +243,7 @@ class PageContent extends React.Component {
       <div>
         <Row type='flex' justify='center'>
           <Col span={22}>
-            <Select defaultValue='请选择服务器' style={{ width: 120 }}
+            <Select defaultValue={this.state.defaultServer} style={{ width: 120 }}
               onChange={(value) => this.selectChange(value)}>
               {this.state.servers.length ? this.state.servers.map((server, index) => {
                 return <Option value={server} key={index}>{server}</Option>
