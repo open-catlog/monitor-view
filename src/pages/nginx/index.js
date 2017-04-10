@@ -163,7 +163,7 @@ class PageContent extends React.Component {
       title: 'URI',
       dataIndex: 'uri',
       key: 'uri',
-      width: '550px'
+      width: '500px'
     }, {
       title: 'Request Count',
       dataIndex: 'request_count',

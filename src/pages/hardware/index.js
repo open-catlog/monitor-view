@@ -19,7 +19,8 @@ class PageContent extends React.Component {
     this.state = {
       servers: [],
       defaultServer: '192.168.0.128',
-      currentServer: '192.168.0.128'
+      currentServer: '192.168.0.128',
+      intervalId: 0
     };
   };
 
@@ -225,9 +226,11 @@ class PageContent extends React.Component {
 
   shouldComponentUpdate() {
     let _self = this;
-    setInterval(function () {
+    let tempState = Object.assign({}, _self.state);
+    tempState.intervalId = setInterval(function () {
       _self.requestData(_self.state.currentServer);
     }, 30 * 1000);
+    this.setState(tempState);
     return true;
   };
 
@@ -236,6 +239,10 @@ class PageContent extends React.Component {
     tempState.currentServer = value;
     this.setState(tempState);
     this.requestData(value);
+  };
+
+  componentWillUnmount() {
+    clearInterval(this.state.intervalId);
   };
 
   render() {
