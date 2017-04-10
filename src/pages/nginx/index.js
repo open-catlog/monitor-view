@@ -6,6 +6,7 @@ import { Table, Select, message, Col, Row, Input } from 'antd';
 const Option = Select.Option;
 const Search = Input.Search;
 
+import { isEmptyObject } from '../../../utils/util';
 import { getRequest } from '../../../utils/httpClient';
 import { option, series } from '../../../src/global/common/chartOption';
 
@@ -16,19 +17,19 @@ class PageContent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      servers: [],
+      domains: [],
       tableData: [],
       tableVisible: true,
       chartVisible: false,
-      defaultServer: '127.0.0.1',
-      currentServer: '127.0.0.1'
+      defaultDomain: 'shop.m.showjoy.net',
+      currentDomain: 'shop.m.showjoy.net',
+      charts: {}
     };
   };
 
   renderTable = result => {
     let tempState = Object.assign({}, this.state);
     Object.keys(result).forEach((data, index) => {
-      console.log(data)
       tempState.tableData.push({
         key: index,
         uri: data,
@@ -40,26 +41,30 @@ class PageContent extends React.Component {
     this.setState(tempState);
   };
 
-  renderChart = result => {
-    option.series = [];
-    let uriChart;
-    let uriInfoOption = Object.assign({}, option);
-    let uriInfoSeries;
-    uriChart = echarts.init(document.getElementById('nginx-uri-chart'));
-    uriInfoOption.title.text = 'URI Info';
-    uriInfoOption.xAxis.data = result.map(data => {
-      let momentTime = moment(data.time);
-      return momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
-    });
-    for (let i = 0; i < 3; i++) {
-      uriInfoSeries = Object.assign({}, series);
-      uriInfoSeries.name = i === 0 ? 'RequestCount' : i === 1 ? 'RequestTime' : 'AverageRequestTime';
-      uriInfoSeries.data = result.map(data => {
-        return i === 0 ? data.requestCount : i === 1 ? data.requestTime : data.averageTime;
+  renderChart = data => {
+    Object.keys(data).forEach((uri, index) => {
+      option.series = [];
+      let uriChart;
+      let uriInfoOption = Object.assign({}, option);
+      let uriInfoSeries;
+      uriChart = echarts.init(document.getElementById('nginx-chart-' + index));
+      uriInfoOption.title.text = 'URI: ' + uri;
+      uriInfoOption.xAxis.data = data[uri].map(uriInfo => {
+        let momentTime = moment(uriInfo.time);
+        return momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
       });
-      uriInfoOption.series.push(uriInfoSeries);
-    }
-    uriChart.setOption(uriInfoOption);
+
+      for (let i = 0; i < 3; i++) {
+        uriInfoSeries = Object.assign({}, series);
+        uriInfoSeries.name = i === 0 ? 'RequestCount' : i === 1 ? 'RequestTime' : 'AverageRequestTime';
+        uriInfoSeries.data = data[uri].map(uriInfo => {
+          return i === 0 ? uriInfo.requestCount : i === 1 ? uriInfo.requestTime : uriInfo.averageTime;
+        });
+        uriInfoOption.series.push(uriInfoSeries);
+      }
+      uriChart.setOption(uriInfoOption);
+    });
+
   };
 
   requestData = value => {
@@ -67,9 +72,9 @@ class PageContent extends React.Component {
 
     getRequest({
       context: _self,
-      url: 'http://localhost:6789/paas/getAllNginxInfo',
+      url: 'http://localhost:6789/paas/getAllNginxInfoByDomain',
       data: {
-        server: value
+        domain: value
       },
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
@@ -87,23 +92,23 @@ class PageContent extends React.Component {
     let tempState = Object.assign({}, this.state);
     getRequest({
       context: _self,
-      url: 'http://localhost:6789/paas/getNginxServers',
+      url: 'http://localhost:6789/paas/getNginxDomains',
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
         if (responseResult.success) {
-          tempState.servers = responseResult.data;
+          tempState.domains = responseResult.data;
           _self.setState(tempState);
         } else {
           message.error(responseResult.message);
         }
       }
     });
-    _self.requestData(this.state.defaultServer);
+    _self.requestData(this.state.defaultDomain);
   };
 
   selectChange = value => {
     let tempState = Object.assign({}, this.state);
-    tempState.currentServer = value;
+    tempState.currentDomain = value;
     tempState.tableData = [];
     tempState.tableVisible = true;
     tempState.chartVisible = false;
@@ -112,6 +117,12 @@ class PageContent extends React.Component {
   };
 
   searchUri = value => {
+    let _self = this;
+    if (!_self.state.currentDomain) {
+      message.error('请选择域名后重新搜索~');
+      return;
+    }
+    let tempState = Object.assign({}, this.state);
     if (value === '') {
       message.error('请输入 uri 地址后重试~');
     } else {
@@ -122,17 +133,20 @@ class PageContent extends React.Component {
       this.setState(tempState);
       getRequest({
         context: _self,
-        url: 'http://localhost:6789/paas/getNginxInfoByUri',
+        url: 'http://localhost:6789/paas/getNginxInfoByDomainAndUri',
         data: {
+          domain: _self.state.currentDomain,
           uri: value,
-          hours: 1
+          hours: 24
         },
         response: (err, res) => {
           let responseResult = JSON.parse(res.text);
           if (responseResult.success) {
-            if (responseResult.data.length === 0) {
-              message.error('未找到匹配的 uri~')
+            if (isEmptyObject(responseResult.data)) {
+              message.error('未找到匹配的 uri~');
             } else {
+              tempState.charts = responseResult.data;
+              _self.setState(tempState);
               _self.renderChart(responseResult.data);
             }
           } else {
@@ -148,7 +162,8 @@ class PageContent extends React.Component {
     const columns = [{
       title: 'URI',
       dataIndex: 'uri',
-      key: 'uri'
+      key: 'uri',
+      width: '550px'
     }, {
       title: 'Request Count',
       dataIndex: 'request_count',
@@ -171,15 +186,18 @@ class PageContent extends React.Component {
         <Row type="flex" justify="center">
           <Col span={22}>
             <div>
-              <Select defaultValue={this.state.defaultServer} style={{ width: 120 }}
+              <Select defaultValue={this.state.defaultDomain} style={{ width: 120 }}
                 onSelect={(value) => this.selectChange(value)}>
-                {this.state.servers.length ? this.state.servers.map((server, index) => {
-                  return <Option value={server} key={index}>{server}</Option>
+                {this.state.domains.length ? this.state.domains.map((domain, index) => {
+                  return <Option value={domain} key={index}>{domain}</Option>
                 }) : null}
               </Select>
               <Search placeholder="请输入 uri 地址" onSearch={uri => this.searchUri(uri)} />
             </div>
-            {this.state.chartVisible ? <Row><Col span={24}><div id="nginx-uri-chart" /></Col></Row> : ''}
+            {this.state.chartVisible ?
+              Object.keys(this.state.charts).map((chart, index) => {
+                return (<Row key={index}><Col span={24}><div id={'nginx-chart-' + index} style={{ width: '100%', height: '100%' }} /></Col></Row>);
+              }) : ''}
             {this.state.tableVisible ? <Table columns={columns} dataSource={this.state.tableData} /> : ''}
           </Col>
         </Row>
