@@ -34,9 +34,9 @@ class PageContent extends React.Component {
     tempState.maxThreads = data.maxThreads;
     tempState.startTime = moment.unix(data.startTime / 1000).format('YYYY-MM-DD HH:mm:ss');
     tempState.uptime = data.upTime;
+    tempState.sessions = [];
     data.sessionInfo.forEach(session => {
       if (tempState.sessions.indexOf(session.context) === -1) {
-        tempState.sessions = [];
         tempState.sessions.push(session.context);
       }
     });
