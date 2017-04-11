@@ -23,7 +23,7 @@ class PageContent extends React.Component {
       sessions: [],
       defaultServer: '127.0.0.1',
       currentServer: '127.0.0.1',
-      intervalId: 0
+      intervalIds: []
     };
   };
 
@@ -137,15 +137,14 @@ class PageContent extends React.Component {
 
   componentWillMount() {
     let _self = this;
-    let tempState = Object.assign({}, this.state);
     getRequest({
       context: _self,
       url: 'http://localhost:6789/paas/getTomcatServers',
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
         if (responseResult.success) {
-          tempState.servers = responseResult.data;
-          _self.setState(tempState);
+          _self.state.servers = responseResult.data;
+          _self.setState(_self.state);
         } else {
           message.error(responseResult.message);
         }
@@ -155,12 +154,14 @@ class PageContent extends React.Component {
   };
 
   shouldComponentUpdate() {
+    for (let i = 0; i < this.state.intervalIds.length; i++) {
+        clearInterval(this.state.intervalIds[i]);
+        this.state.intervalIds.shift();
+    }
     let _self = this;
-    let tempState = Object.assign({}, _self.state);
-    tempState.intervalId = setInterval(function() {
+    this.state.intervalIds.push(setInterval(function () {
       _self.requestData(_self.state.currentServer);
-    }, 30 * 1000);
-    this.setState(tempState);
+    }, 45 * 1000));
     return true;
   };
 
@@ -172,7 +173,10 @@ class PageContent extends React.Component {
   };
 
   componentWillUnmount() {
-    clearInterval(this.state.intervalId);
+    for (let i = 0; i < this.state.intervalIds.length; i++) {
+      clearInterval(this.state.intervalIds[i]);
+      this.state.intervalIds.shift();
+    }
   };
 
   render() {
