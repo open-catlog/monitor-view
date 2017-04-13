@@ -7,6 +7,9 @@ let locationProps = [{
     }, {
       pageName: 'Nginx',
       pageUrl: '/nginx'
+    }, {
+      pageName: 'MySQL',
+      pageUrl: '/mysql'
     }]
 }];
 

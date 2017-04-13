@@ -41,11 +41,12 @@ const routes = {
           require('./src/pages/hardware/index').default
         ]);
       });
-    } else if (history.location.pathname === '/tomcat' || history.location.pathname === '/nginx') {
+    } else if (history.location.pathname === '/tomcat' || history.location.pathname === '/nginx' || history.location.pathname === '/mysql') {
       require.ensure([], function (require) {
         callback(null, [
           require('./src/pages/tomcat/index').default,
-          require('./src/pages/nginx/index').default
+          require('./src/pages/nginx/index').default,
+          require('./src/pages/mysql/index').default
         ]);
       });
     }

@@ -66,3 +66,9 @@ exports.series = {
   },
   data: []
 };
+
+exports.stackedSeries = {
+  type: 'line',
+  areaStyle: {normal: {}},
+  data: []
+};

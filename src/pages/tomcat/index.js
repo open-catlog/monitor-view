@@ -127,7 +127,11 @@ class PageContent extends React.Component {
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
         if (responseResult.success) {
-          _self.renderChart(responseResult.data);
+          if (responseResult.data.threadInfo.length && responseResult.data.GCInfo.length) {
+            _self.renderChart(responseResult.data);
+          } else {
+            message.error('服务端返回的数据为空~');
+          }
         } else {
           message.error(responseResult.message);
         }

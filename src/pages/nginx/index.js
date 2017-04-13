@@ -64,7 +64,6 @@ class PageContent extends React.Component {
       }
       uriChart.setOption(uriInfoOption);
     });
-
   };
 
   requestData = value => {
