@@ -91,6 +91,7 @@ class Default extends React.Component {
     };
 
     renderPVChart = data => {
+        option.series[0].data = [];
         let chart = echarts.init(document.getElementById('map-chart'));
         Object.keys(data).forEach(prov => {
             let pvData = {
@@ -103,6 +104,7 @@ class Default extends React.Component {
     };
 
     renderUVChart = data => {
+        option.series[1].data = [];
         let chart = echarts.init(document.getElementById('map-chart'));
         Object.keys(data).forEach(prov => {
             let uvData = {
