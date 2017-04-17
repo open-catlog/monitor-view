@@ -1,18 +1,20 @@
+import _ from 'lodash';
 import React from 'react';
+import moment from 'moment';
 import echarts from 'echarts';
 
-import './style';
 import '../../global/common/china.js';
+import { getRequest } from '../../../utils/httpClient';
 
-function randomData() {
-    return Math.round(Math.random()*1000);
-}
+import './style';
 
 var option = {
     title: {
-        text: 'iphone销量',
-        subtext: '纯属虚构',
-        left: 'center'
+        text: 'PV/UV 分布图',
+        left: 'center',
+        textStyle: {
+            color: '#D9D9D9'
+        }
     },
     tooltip: {
         trigger: 'item'
@@ -20,33 +22,29 @@ var option = {
     legend: {
         orient: 'vertical',
         left: 'left',
-        data:['iphone3','iphone4','iphone5']
+        data: ['UV', 'PV'],
+        textStyle: {
+            color: '#D9D9D9'
+        }
     },
     visualMap: {
         min: 0,
-        max: 2500,
+        max: 1000,
         left: 'left',
         top: 'bottom',
-        text: ['高','低'],           // 文本，默认为数值文本
+        text: ['高', '低'],
         calculable: true
-    },
-    toolbox: {
-        show: true,
-        orient: 'vertical',
-        left: 'right',
-        top: 'center',
-        feature: {
-            dataView: {readOnly: false},
-            restore: {},
-            saveAsImage: {}
-        }
     },
     series: [
         {
-            name: 'iphone3',
+            name: 'PV',
             type: 'map',
             mapType: 'china',
-            roam: false,
+            roam: true,
+            itemStyle: {
+                normal: { label: { show: true } },
+                emphasis: { label: { show: true } }
+            },
             label: {
                 normal: {
                     show: true
@@ -55,47 +53,17 @@ var option = {
                     show: true
                 }
             },
-            data:[
-                {name: '北京',value: randomData() },
-                {name: '天津',value: randomData() },
-                {name: '上海',value: randomData() },
-                {name: '重庆',value: randomData() },
-                {name: '河北',value: randomData() },
-                {name: '河南',value: randomData() },
-                {name: '云南',value: randomData() },
-                {name: '辽宁',value: randomData() },
-                {name: '黑龙江',value: randomData() },
-                {name: '湖南',value: randomData() },
-                {name: '安徽',value: randomData() },
-                {name: '山东',value: randomData() },
-                {name: '新疆',value: randomData() },
-                {name: '江苏',value: randomData() },
-                {name: '浙江',value: randomData() },
-                {name: '江西',value: randomData() },
-                {name: '湖北',value: randomData() },
-                {name: '广西',value: randomData() },
-                {name: '甘肃',value: randomData() },
-                {name: '山西',value: randomData() },
-                {name: '内蒙古',value: randomData() },
-                {name: '陕西',value: randomData() },
-                {name: '吉林',value: randomData() },
-                {name: '福建',value: randomData() },
-                {name: '贵州',value: randomData() },
-                {name: '广东',value: randomData() },
-                {name: '青海',value: randomData() },
-                {name: '西藏',value: randomData() },
-                {name: '四川',value: randomData() },
-                {name: '宁夏',value: randomData() },
-                {name: '海南',value: randomData() },
-                {name: '台湾',value: randomData() },
-                {name: '香港',value: randomData() },
-                {name: '澳门',value: randomData() }
-            ]
+            data: []
         },
         {
-            name: 'iphone4',
+            name: 'UV',
             type: 'map',
             mapType: 'china',
+            roam: true,
+            itemStyle: {
+                normal: { label: { show: true } },
+                emphasis: { label: { show: true } }
+            },
             label: {
                 normal: {
                     show: true
@@ -104,75 +72,120 @@ var option = {
                     show: true
                 }
             },
-            data:[
-                {name: '北京',value: randomData() },
-                {name: '天津',value: randomData() },
-                {name: '上海',value: randomData() },
-                {name: '重庆',value: randomData() },
-                {name: '河北',value: randomData() },
-                {name: '安徽',value: randomData() },
-                {name: '新疆',value: randomData() },
-                {name: '浙江',value: randomData() },
-                {name: '江西',value: randomData() },
-                {name: '山西',value: randomData() },
-                {name: '内蒙古',value: randomData() },
-                {name: '吉林',value: randomData() },
-                {name: '福建',value: randomData() },
-                {name: '广东',value: randomData() },
-                {name: '西藏',value: randomData() },
-                {name: '四川',value: randomData() },
-                {name: '宁夏',value: randomData() },
-                {name: '香港',value: randomData() },
-                {name: '澳门',value: randomData() }
-            ]
-        },
-        {
-            name: 'iphone5',
-            type: 'map',
-            mapType: 'china',
-            label: {
-                normal: {
-                    show: true
-                },
-                emphasis: {
-                    show: true
-                }
-            },
-            data:[
-                {name: '北京',value: randomData() },
-                {name: '天津',value: randomData() },
-                {name: '上海',value: randomData() },
-                {name: '广东',value: randomData() },
-                {name: '台湾',value: randomData() },
-                {name: '香港',value: randomData() },
-                {name: '澳门',value: randomData() }
-            ]
+            data: []
         }
     ]
 };
 
 class Default extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
+    constructor(props) {
+        super(props);
+        this.state = {
+            defaultDate: moment().format('YYYYMMDD'),
+            currentDate: '',
+            defaultDomain: 'www.showjoy.com',
+            currentDomain: 'www.showjoy.com',
+            domains: []
+        };
     };
-  };
 
-  componentDidMount() {
-    let mapChart = echarts.init(document.getElementById('map-chart'));
-    mapChart.setOption(option);
-  };
+    renderPVChart = data => {
+        let chart = echarts.init(document.getElementById('map-chart'));
+        Object.keys(data).forEach(prov => {
+            let pvData = {
+                name: prov,
+                value: data[prov]
+            };
+            option.series[0].data.push(pvData);
+        });
+        chart.setOption(option);
+    };
 
-  render() {
-    return (
-        <div id="map-chart"></div>
-    );
-  }
+    renderUVChart = data => {
+        let chart = echarts.init(document.getElementById('map-chart'));
+        Object.keys(data).forEach(prov => {
+            let uvData = {
+                name: prov,
+                value: data[prov]
+            };
+            option.series[1].data.push(uvData);
+        });
+        chart.setOption(option);
+    };
+
+    requestData = (domain, date) => {
+        let _self = this;
+        getRequest({
+            context: _self,
+            url: 'http://localhost:6789/saas/getPVByDomainAndDate',
+            data: {
+                domain: domain,
+                date: date
+            },
+            response: (err, res) => {
+                let responseResult = JSON.parse(res.text);
+                if (responseResult.success) {
+                    if (!_.isEmpty(responseResult.data)) {
+                        _self.renderPVChart(responseResult.data);
+                    } else {
+                        message.error('服务端返回的PV数据为空~');
+                    }
+                } else {
+                    message.error(responseResult.message);
+                }
+            }
+        });
+
+        getRequest({
+            context: _self,
+            url: 'http://localhost:6789/saas/getUVByDomainAndDate',
+            data: {
+                domain: domain,
+                date: date
+            },
+            response: (err, res) => {
+                let responseResult = JSON.parse(res.text);
+                if (responseResult.success) {
+                    if (!_.isEmpty(responseResult.data)) {
+                        _self.renderUVChart(responseResult.data);
+                    } else {
+                        message.error('服务端返回的UV数据为空~');
+                    }
+                } else {
+                    message.error(responseResult.message);
+                }
+            }
+        });
+    };
+
+    componentWillMount() {
+        let _self = this;
+        getRequest({
+            context: _self,
+            url: 'http://localhost:6789/saas/getDomains',
+            response: (err, res) => {
+                let responseResult = JSON.parse(res.text);
+                if (responseResult.success) {
+                    _self.state.domains = responseResult.data;
+                    _self.setState(_self.state);
+                } else {
+                    message.error(responseResult.message);
+                }
+            }
+        });
+        _self.requestData(this.state.defaultDomain, this.state.defaultDate);
+    };
+
+    render() {
+        return (
+            <div id="map-chart"></div>
+        );
+    }
 }
 
 let route = {
-  component: Default
+    component: Default
 };
 
 export default route;

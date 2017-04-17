@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import moment from 'moment';
 import echarts from 'echarts';
@@ -6,7 +7,6 @@ import { Table, Select, message, Col, Row, Input } from 'antd';
 const Option = Select.Option;
 const Search = Input.Search;
 
-import { isEmptyObject } from '../../../utils/util';
 import { getRequest } from '../../../utils/httpClient';
 import { option, series } from '../../../src/global/common/chartOption';
 
@@ -141,7 +141,7 @@ class PageContent extends React.Component {
         response: (err, res) => {
           let responseResult = JSON.parse(res.text);
           if (responseResult.success) {
-            if (isEmptyObject(responseResult.data)) {
+            if (_.isEmpty(responseResult.data)) {
               message.error('未找到匹配的 uri~');
             } else {
               tempState.charts = responseResult.data;
