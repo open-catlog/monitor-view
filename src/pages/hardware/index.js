@@ -256,7 +256,7 @@ class PageContent extends React.Component {
       <div>
         <Row type='flex' justify='center'>
           <Col span={22}>
-            <Select defaultValue={this.state.defaultServer} style={{ width: 120 }}
+            <Select defaultValue={this.state.defaultServer}
               onChange={(value) => this.selectChange(value)}>
               {this.state.servers.length ? this.state.servers.map((server, index) => {
                 return <Option value={server} key={index}>{server}</Option>

@@ -3,6 +3,9 @@ import React from 'react';
 import moment from 'moment';
 import echarts from 'echarts';
 
+import { message, Select, Row, Col, DatePicker } from 'antd';
+const Option = Select.Option;
+
 import '../../global/common/china.js';
 import { getRequest } from '../../../utils/httpClient';
 
@@ -83,7 +86,7 @@ class Default extends React.Component {
         super(props);
         this.state = {
             defaultDate: moment().format('YYYYMMDD'),
-            currentDate: '',
+            currentDate: moment().format('YYYYMMDD'),
             defaultDomain: 'www.showjoy.com',
             currentDomain: 'www.showjoy.com',
             domains: []
@@ -161,6 +164,24 @@ class Default extends React.Component {
         });
     };
 
+    selectChange = value => {
+        let tempState = Object.assign({}, this.state);
+        tempState.currentDomain = value;
+        this.setState(tempState);
+        this.requestData(value, this.state.currentDate);
+    };
+
+    disabledDate = current => {
+        return current.valueOf() > Date.now() || current.valueOf() < new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    };
+
+    onDateChange = (date, dateString) => {
+        let tempState = Object.assign({}, this.state);
+        tempState.currentDate = date.format('YYYYMMDD');
+        this.setState(tempState);
+        this.requestData(this.state.currentDomain, date.format('YYYYMMDD'));
+    };
+
     componentWillMount() {
         let _self = this;
         getRequest({
@@ -181,7 +202,27 @@ class Default extends React.Component {
 
     render() {
         return (
-            <div id="map-chart"></div>
+            <div id="map">
+                <Row type='flex' justify='center'>
+                    <Col span={22}>
+                        <div>
+                            <Select defaultValue={this.state.defaultDomain}
+                                onChange={(value) => this.selectChange(value)}>
+                                {this.state.domains.length ? this.state.domains.map((domain, index) => {
+                                    return <Option value={domain} key={index}>{domain}</Option>
+                                }) : null}
+                            </Select>
+                            <DatePicker
+                                defaultValue={moment()}
+                                format="YYYY-MM-DD"
+                                disabledDate={this.disabledDate}
+                                onChange={(date, dateString) => this.onDateChange(date, dateString)}
+                            />
+                        </div>
+                        <Col span={24}><div id='map-chart' /></Col>
+                    </Col>
+                </Row>
+            </div>
         );
     }
 }

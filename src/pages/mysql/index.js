@@ -149,7 +149,7 @@ class PageContent extends React.Component {
         <Row type='flex' justify='center'>
           <Col span={22}>
             <div>
-              <Select defaultValue={this.state.defaultDatabase} style={{ width: 120 }}
+              <Select defaultValue={this.state.defaultDatabase}
                 onChange={(value) => this.selectChange(value)}>
                 {this.state.databases.length ? this.state.databases.map((database, index) => {
                   return <Option value={database} key={index}>{database}</Option>
