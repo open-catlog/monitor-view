@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, hashHistory } from 'react-router';
+
 import { Layout } from 'antd';
 
-import SiderBar from './src/global/layout/SiderBar/index';
-import CustomHeader from './src/global/layout/Header/index';
+import SiderBar from './src/global/components/SiderBar/index';
+import CustomHeader from './src/global/components/Header/index';
 
 const { Header, Content, Sider } = Layout;
 
@@ -47,6 +48,12 @@ const routes = {
           require('./src/pages/tomcat/index').default,
           require('./src/pages/nginx/index').default,
           require('./src/pages/mysql/index').default
+        ]);
+      });
+    } else if (history.location.pathname === '/config') {
+      require.ensure([], function (require) {
+        callback(null, [
+          require('./src/pages/config/index').default
         ]);
       });
     }

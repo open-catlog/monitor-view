@@ -1,0 +1,34 @@
+@import "../../less/color";
+
+.plus-button {
+  background: transparent;
+  border: none;
+  color: @grey;
+}
+
+.plus-button:hover {
+  background-color: rgba(0,0,0,.2);
+}
+
+.setting-input {
+  margin: 0!important;
+}
+
+.dynamic-delete-button {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+  font-size: 20px;
+  color: @grey;
+  transition: all .3s;
+  margin-left: 5px;
+}
+
+.dynamic-delete-button:hover {
+  color: @white;
+}
+
+.dynamic-delete-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}

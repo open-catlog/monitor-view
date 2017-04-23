@@ -32,7 +32,7 @@ var option = {
     },
     visualMap: {
         min: 0,
-        max: 1000,
+        max: 3000,
         left: 'left',
         top: 'bottom',
         text: ['高', '低'],

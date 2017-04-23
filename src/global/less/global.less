@@ -1,3 +1,5 @@
+@import "./color";
+
 #app {
   height: 100%;
   background: url(../../../assets/images/blur-bg.jpg);
@@ -39,10 +41,15 @@
 
 .ant-select-selection {
   background: transparent!important;
-  color: #fff!important;
+  color: @white!important;
 }
 
 .ant-select-selection--single,
 .ant-select-dropdown--single {
   width: 170px!important;
+}
+
+.ant-input {
+  color: @white!important;
+  background: transparent!important;
 }

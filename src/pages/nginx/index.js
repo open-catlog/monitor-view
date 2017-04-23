@@ -191,7 +191,7 @@ class PageContent extends React.Component {
                   return <Option value={domain} key={index}>{domain}</Option>
                 }) : null}
               </Select>
-              <Search placeholder="请输入 uri 地址" onSearch={uri => this.searchUri(uri)} />
+              <Search className="search-box" placeholder="请输入 uri 地址" onSearch={uri => this.searchUri(uri)} />
             </div>
             {this.state.chartVisible ?
               Object.keys(this.state.charts).map((chart, index) => {

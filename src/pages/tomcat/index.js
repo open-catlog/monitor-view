@@ -197,16 +197,16 @@ class PageContent extends React.Component {
             <div className='antd-card'>
               <Row>
                 <Col span='6'>
-                  <Card title='startTime' bordered={false}>{this.state.startTime}</Card>
+                  <Card className="tomcat-card" title='startTime' bordered={false}>{this.state.startTime}</Card>
                 </Col>
                 <Col span='6'>
-                  <Card title='uptime' bordered={false}>{this.state.uptime}</Card>
+                  <Card className="tomcat-card" title='uptime' bordered={false}>{this.state.uptime}</Card>
                 </Col>
                 <Col span='6'>
-                  <Card title='maxThreads' bordered={false}>{this.state.maxThreads}</Card>
+                  <Card className="tomcat-card" title='maxThreads' bordered={false}>{this.state.maxThreads}</Card>
                 </Col>
                 <Col span='6'>
-                  <Card title='maxActiveSessions' bordered={false}>{this.state.maxActiveSessions}</Card>
+                  <Card className="tomcat-card" title='maxActiveSessions' bordered={false}>{this.state.maxActiveSessions}</Card>
                 </Col>
               </Row>
             </div>

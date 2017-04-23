@@ -16,9 +16,29 @@ export function getRequest(reqObj) {
         reqObj.response.call(reqObj.context, err, res);
       } else {
         notification['warning']({
-            message: '对不起,系统升级中',
-            description: '如果系统长时间处于升级状态,请联系工程师们为您解决问题。'
-          });
+          message: '对不起,系统升级中',
+          description: '如果系统长时间处于升级状态,请联系工程师们为您解决问题。'
+        });
       }
     });
+}
+
+/*
+ * POST method
+ * */
+export function postRequest(reqObj) {
+  request.post(reqObj.url)
+    .send(reqObj.data)
+    .end((err, res) => {
+      if (res.status === 200) {
+        reqObj.response.call(reqObj.context, err, res);
+      } else {
+        notification['warning']({
+          message: '对不起,系统升级中',
+          description: '如果系统长时间处于升级状态,请联系工程师们为您解决问题。',
+          duration: 7
+        });
+      }
+    });
+
 }
