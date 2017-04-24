@@ -3,7 +3,7 @@
 .plus-button {
   background: transparent;
   border: none;
-  color: @grey;
+  color: @white;
 }
 
 .plus-button:hover {
@@ -12,14 +12,19 @@
 
 .setting-input {
   margin: 0!important;
+  border: 1px solid @grey;
+}
+
+.setting-input:hover,
+.setting-input:focus {
+  border-color: @green;
 }
 
 .dynamic-delete-button {
   cursor: pointer;
   position: relative;
   top: 4px;
-  font-size: 20px;
-  color: @grey;
+  color: @white;
   transition: all .3s;
   margin-left: 5px;
 }
@@ -31,4 +36,13 @@
 .dynamic-delete-button[disabled] {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.setting-submit {
+  border-color: @grey;
+  background-color: rgba(0,0,0,.5);
+}
+
+.setting-submit:hover {
+  background-color: @green;
 }

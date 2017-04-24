@@ -49,7 +49,7 @@ class DynamicFieldSet extends React.Component {
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
         if (responseResult.success) {
-          message.info('设置成功');
+          message.info('设置成功，请刷新页面');
         } else {
           message.error(responseResult.message);
         }
@@ -165,11 +165,11 @@ class DynamicFieldSet extends React.Component {
         {formItems}
         <FormItem {...formItemLayoutWithOutLabel}>
           <Button className="plus-button" type="primary" size="small" onClick={this.add}>
-            <Icon type="plus" />{this.props.type === 'server' ? '添加服务器' : this.props.type === 'database' ? '添加数据库' : '添加域名'}
+            <Icon type="plus" />{this.props.type === 'server' ? '添加／删除服务器' : this.props.type === 'database' ? '添加／删除数据库' : '添加／删除域名'}
           </Button>
         </FormItem>
         <FormItem {...formItemLayoutWithOutLabel}>
-          <Button type="primary" htmlType="submit" size="large">Submit</Button>
+          <Button className="setting-submit" type="primary" htmlType="submit" size="large">提交</Button>
         </FormItem>
       </Form>
     );

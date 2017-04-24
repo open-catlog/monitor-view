@@ -21,8 +21,8 @@ class PageContent extends React.Component {
       tableData: [],
       tableVisible: true,
       chartVisible: false,
-      defaultDomain: 'shop.m.showjoy.net',
-      currentDomain: 'shop.m.showjoy.net',
+      defaultDomain: 'www.showjoy.com',
+      currentDomain: 'www.showjoy.com',
       charts: {}
     };
   };
@@ -51,7 +51,7 @@ class PageContent extends React.Component {
       uriInfoOption.title.text = 'URI: ' + uri;
       uriInfoOption.xAxis.data = data[uri].map(uriInfo => {
         let momentTime = moment(uriInfo.time);
-        return momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
+        return (momentTime.month() + 1) + '.'  + momentTime.date() + ',' + momentTime.hour() + ':' + momentTime.minute() + ':' + momentTime.seconds();
       });
 
       for (let i = 0; i < 3; i++) {
@@ -136,7 +136,7 @@ class PageContent extends React.Component {
         data: {
           domain: _self.state.currentDomain,
           uri: value,
-          hours: 24
+          hours: 24 * 7
         },
         response: (err, res) => {
           let responseResult = JSON.parse(res.text);

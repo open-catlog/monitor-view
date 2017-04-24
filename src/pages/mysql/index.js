@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import echarts from 'echarts';
 
-import { Select, Row, Col, Switch, message } from 'antd';
+import { Select, Row, Col, Switch, message, InputNumber, Button } from 'antd';
 const Option = Select.Option;
 
 import { getRequest } from '../../../utils/httpClient';
@@ -19,6 +19,8 @@ class PageContent extends React.Component {
       databases: [],
       defaultDatabase: 'shop',
       currentDatabase: 'shop',
+      defaultSeconds: 600,
+      currentSeconds: 600
     };
   };
 
@@ -84,15 +86,15 @@ class PageContent extends React.Component {
     mysqlChart.setOption(mysqlInfoOption);
   };
 
-  requestData = () => {
+  requestData = (database, server, seconds) => {
     let _self = this;
     getRequest({
       context: _self,
       url: 'http://localhost:6789/paas/getMysqlInfoByServerAndDatabase',
       data: {
-        database: _self.state.currentDatabase,
-        seconds: 600,
-        server: _self.state.server
+        database: database,
+        seconds: seconds,
+        server: server
       },
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
@@ -124,13 +126,13 @@ class PageContent extends React.Component {
         }
       }
     });
-    _self.requestData();
+    _self.requestData(_self.state.defaultDatabase, _self.state.server, _self.state.defaultSeconds);
   };
 
   selectChange = value => {
     this.state.currentDatabase = value;
     this.setState(this.state);
-    this.requestData();
+    this.requestData(value, this.state.server, this.state.currentSeconds);
   };
 
   onChange = (checked) => {
@@ -140,7 +142,17 @@ class PageContent extends React.Component {
       this.state.server = 'offline';
     }
     this.setState(this.state);
-    this.requestData();
+    this.requestData(this.state.currentDatabase, this.state.server, this.state.currentSeconds);
+  };
+
+  onTimeChange = value => {
+    let tempState = Object.assign({}, this.state);
+    tempState.currentSeconds = value;
+    this.setState(tempState);
+  };
+
+  onSubmit = () => {
+    this.requestData(this.state.currentDatabase, this.state.server, this.state.currentSeconds);
   };
 
   render() {
@@ -155,6 +167,13 @@ class PageContent extends React.Component {
                   return <Option value={database} key={index}>{database}</Option>
                 }) : null}
               </Select>
+              <Button className="antd-default-btn" onClick={this.onSubmit}>提交</Button>
+              <InputNumber 
+                defaultValue={this.state.defaultSeconds}
+                min={1}
+                formatter={value => `${value}秒`}
+                parser={value => value.replace('秒', '')}
+                onChange={this.onTimeChange} />
               <Switch checkedChildren={'线上服务器'} unCheckedChildren={'线下服务器'} onChange={this.onChange} />
             </div>
             <Row><Col span={24}><div id='mysql-chart' /></Col></Row>

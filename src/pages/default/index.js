@@ -89,6 +89,7 @@ class Default extends React.Component {
             currentDate: moment().format('YYYYMMDD'),
             defaultDomain: 'www.showjoy.com',
             currentDomain: 'www.showjoy.com',
+            intervalIds: [],
             domains: []
         };
     };
@@ -198,6 +199,25 @@ class Default extends React.Component {
             }
         });
         _self.requestData(this.state.defaultDomain, this.state.defaultDate);
+    };
+
+    shouldComponentUpdate() {
+        for (let i = 0; i < this.state.intervalIds.length; i++) {
+            clearInterval(this.state.intervalIds[i]);
+            this.state.intervalIds.shift();
+        }
+        let _self = this;
+        this.state.intervalIds.push(setInterval(function () {
+            _self.requestData(_self.state.currentDomain, _self.state.currentDate);
+        }, 15 * 60 * 1000));
+        return true;
+    };
+
+    componentWillUnmount() {
+        for (let i = 0; i < this.state.intervalIds.length; i++) {
+            clearInterval(this.state.intervalIds[i]);
+            this.state.intervalIds.shift();
+        }
     };
 
     render() {

@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import echarts from 'echarts';
 
-import { message, Select, Card, Col, Row } from 'antd';
+import { message, Select, Card, Col, Row, InputNumber, Button } from 'antd';
 const Option = Select.Option;
 
 import { getRequest } from '../../../utils/httpClient';
@@ -21,9 +21,11 @@ class PageContent extends React.Component {
       startTime: '',
       uptime: '',
       sessions: [],
-      defaultServer: '127.0.0.1',
-      currentServer: '127.0.0.1',
-      intervalIds: []
+      defaultServer: '192.168.0.101',
+      currentServer: '192.168.0.101',
+      intervalIds: [],
+      defaultSeconds: 600,
+      currentSeconds: 600
     };
   };
 
@@ -114,15 +116,15 @@ class PageContent extends React.Component {
     });
   };
 
-  requestData = value => {
+  requestData = (server, seconds) => {
     let _self = this;
 
     getRequest({
       context: _self,
       url: 'http://localhost:6789/paas/getTomcatInfo',
       data: {
-        seconds: 600,
-        server: value
+        seconds: seconds,
+        server: server
       },
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
@@ -154,7 +156,7 @@ class PageContent extends React.Component {
         }
       }
     });
-    _self.requestData(this.state.defaultServer);
+    _self.requestData(this.state.defaultServer, this.state.defaultSeconds);
   };
 
   shouldComponentUpdate() {
@@ -164,7 +166,7 @@ class PageContent extends React.Component {
     }
     let _self = this;
     this.state.intervalIds.push(setInterval(function () {
-      _self.requestData(_self.state.currentServer);
+      _self.requestData(_self.state.currentServer, _self.state.currentSeconds);
     }, 45 * 1000));
     return true;
   };
@@ -173,7 +175,17 @@ class PageContent extends React.Component {
     let tempState = Object.assign({}, this.state);
     tempState.currentServer = value;
     this.setState(tempState);
-    this.requestData(value);
+    this.requestData(value, _self.state.currentSeconds);
+  };
+
+  onChange = value => {
+    let tempState = Object.assign({}, this.state);
+    tempState.currentSeconds = value;
+    this.setState(tempState);
+  };
+
+  onSubmit = () => {
+    this.requestData(this.state.currentServer, this.state.currentSeconds);
   };
 
   componentWillUnmount() {
@@ -194,6 +206,13 @@ class PageContent extends React.Component {
                 return <Option value={server} key={index}>{server}</Option>
               }) : null}
             </Select>
+            <Button className="antd-default-btn" onClick={this.onSubmit}>提交</Button>
+            <InputNumber 
+              defaultValue={this.state.defaultSeconds}
+              min={1}
+              formatter={value => `${value}秒`}
+              parser={value => value.replace('秒', '')}
+              onChange={this.onChange} />
             <div className='antd-card'>
               <Row>
                 <Col span='6'>
