@@ -87,10 +87,7 @@ class Default extends React.Component {
         this.state = {
             defaultDate: moment().format('YYYYMMDD'),
             currentDate: moment().format('YYYYMMDD'),
-            defaultDomain: 'www.showjoy.com',
-            currentDomain: 'www.showjoy.com',
-            intervalIds: [],
-            domains: []
+            intervalIds: []
         };
     };
 
@@ -120,13 +117,12 @@ class Default extends React.Component {
         chart.setOption(option);
     };
 
-    requestData = (domain, date) => {
+    requestData = (date) => {
         let _self = this;
         getRequest({
             context: _self,
-            url: 'http://localhost:6789/saas/getPVByDomainAndDate',
+            url: 'http://localhost:6789/saas/getPVByDate',
             data: {
-                domain: domain,
                 date: date
             },
             response: (err, res) => {
@@ -145,9 +141,8 @@ class Default extends React.Component {
 
         getRequest({
             context: _self,
-            url: 'http://localhost:6789/saas/getUVByDomainAndDate',
+            url: 'http://localhost:6789/saas/getUVByDate',
             data: {
-                domain: domain,
                 date: date
             },
             response: (err, res) => {
@@ -165,13 +160,6 @@ class Default extends React.Component {
         });
     };
 
-    selectChange = value => {
-        let tempState = Object.assign({}, this.state);
-        tempState.currentDomain = value;
-        this.setState(tempState);
-        this.requestData(value, this.state.currentDate);
-    };
-
     disabledDate = current => {
         return current.valueOf() > Date.now() || current.valueOf() < new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     };
@@ -180,25 +168,11 @@ class Default extends React.Component {
         let tempState = Object.assign({}, this.state);
         tempState.currentDate = date.format('YYYYMMDD');
         this.setState(tempState);
-        this.requestData(this.state.currentDomain, date.format('YYYYMMDD'));
+        this.requestData(date.format('YYYYMMDD'));
     };
 
     componentWillMount() {
-        let _self = this;
-        getRequest({
-            context: _self,
-            url: 'http://localhost:6789/saas/getDomains',
-            response: (err, res) => {
-                let responseResult = JSON.parse(res.text);
-                if (responseResult.success) {
-                    _self.state.domains = responseResult.data;
-                    _self.setState(_self.state);
-                } else {
-                    message.error(responseResult.message);
-                }
-            }
-        });
-        _self.requestData(this.state.defaultDomain, this.state.defaultDate);
+        this.requestData(this.state.defaultDate);
     };
 
     shouldComponentUpdate() {
@@ -208,7 +182,7 @@ class Default extends React.Component {
         }
         let _self = this;
         this.state.intervalIds.push(setInterval(function () {
-            _self.requestData(_self.state.currentDomain, _self.state.currentDate);
+            _self.requestData(_self.state.currentDate);
         }, 15 * 60 * 1000));
         return true;
     };
@@ -226,12 +200,6 @@ class Default extends React.Component {
                 <Row type='flex' justify='center'>
                     <Col span={22}>
                         <div>
-                            <Select defaultValue={this.state.defaultDomain}
-                                onChange={(value) => this.selectChange(value)}>
-                                {this.state.domains.length ? this.state.domains.map((domain, index) => {
-                                    return <Option value={domain} key={index}>{domain}</Option>
-                                }) : null}
-                            </Select>
                             <DatePicker
                                 defaultValue={moment()}
                                 format="YYYY-MM-DD"
