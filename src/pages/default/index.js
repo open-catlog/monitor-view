@@ -87,6 +87,8 @@ class Default extends React.Component {
         this.state = {
             defaultDate: moment().format('YYYYMMDD'),
             currentDate: moment().format('YYYYMMDD'),
+            pvData: {},
+            uvData: {},
             intervalIds: []
         };
     };
@@ -129,6 +131,8 @@ class Default extends React.Component {
                 let responseResult = JSON.parse(res.text);
                 if (responseResult.success) {
                     if (!_.isEmpty(responseResult.data)) {
+                        _self.state.pvData = responseResult.data;
+                        _self.setState(_self.state);
                         _self.renderPVChart(responseResult.data);
                     } else {
                         message.error('服务端返回的PV数据为空~');
@@ -149,6 +153,8 @@ class Default extends React.Component {
                 let responseResult = JSON.parse(res.text);
                 if (responseResult.success) {
                     if (!_.isEmpty(responseResult.data)) {
+                        _self.state.uvData = responseResult.data;
+                        _self.setState(_self.state);
                         _self.renderUVChart(responseResult.data);
                     } else {
                         message.error('服务端返回的UV数据为空~');
@@ -183,7 +189,7 @@ class Default extends React.Component {
         let _self = this;
         this.state.intervalIds.push(setInterval(function () {
             _self.requestData(_self.state.currentDate);
-        }, 15 * 60 * 1000));
+        }, 60 * 15 * 1000));
         return true;
     };
 
