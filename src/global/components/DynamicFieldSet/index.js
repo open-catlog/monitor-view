@@ -49,7 +49,7 @@ class DynamicFieldSet extends React.Component {
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
         if (responseResult.success) {
-          message.info('设置成功，请刷新页面');
+          message.info('设置成功');
         } else {
           message.error(responseResult.message);
         }
@@ -99,6 +99,7 @@ class DynamicFieldSet extends React.Component {
         }
       }
     });
+    window.location.reload();
   }
 
   render() {
@@ -169,7 +170,7 @@ class DynamicFieldSet extends React.Component {
           </Button>
         </FormItem>
         <FormItem {...formItemLayoutWithOutLabel}>
-          <Button className="setting-submit" type="primary" htmlType="submit" size="large">提交</Button>
+          <Button className="setting-submit" type="primary" htmlType="submit" size="default">提交</Button>
         </FormItem>
       </Form>
     );

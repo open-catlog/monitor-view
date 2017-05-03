@@ -11,6 +11,16 @@ let locationProps = [{
       pageName: 'MySQL',
       pageUrl: '/mysql'
     }]
+}, {
+    listTitle: '配置中心',
+    listIcon: 'setting',
+    list: [{
+      pageName: '服务器配置',
+      pageUrl: '/config'
+    }, {
+      pageName: '阈值配置',
+      pageUrl: '/threshold'
+    }]
 }];
 
 export default locationProps;

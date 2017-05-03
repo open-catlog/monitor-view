@@ -79,12 +79,6 @@ class SiderBar extends React.Component {
             </SubMenu>
           );
         })}
-        <Menu.Item key={(subIndex++) + ""}>
-          <Link to="/config"><span>
-            <Icon type="setting" />
-            <span>配置中心</span>
-          </span></Link>
-        </Menu.Item>
       </Menu>
     );
   }

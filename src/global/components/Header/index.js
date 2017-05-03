@@ -21,7 +21,7 @@ class Header extends React.Component {
         let tempState = Object.assign({}, _self.state);
         getRequest({
             context: _self,
-            url: 'http://console-shop.showjoy.net:6789/getUserInfo',
+            url: 'http://monitor.showjoy.net/getUserInfo',
             response: (err, res) => {
                 let responseResult = JSON.parse(res.text);
                 let userInfo = responseResult.data;

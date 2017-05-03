@@ -50,10 +50,11 @@ const routes = {
           require('./src/pages/mysql/index').default
         ]);
       });
-    } else if (history.location.pathname === '/config') {
+    } else if (history.location.pathname === '/config' || history.location.pathname === '/threshold') {
       require.ensure([], function (require) {
         callback(null, [
-          require('./src/pages/config/index').default
+          require('./src/pages/config/index').default,
+          require('./src/pages/threshold/index').default
         ]);
       });
     }
