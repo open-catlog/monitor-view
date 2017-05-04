@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Tabs, Form, Input, Button, Icon, Modal, Transfer, Tag, message } from 'antd';
+import { Tabs, Form, Input, Button, Icon, Modal, Transfer, Tag, message, InputNumber } from 'antd';
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
 
@@ -13,30 +13,24 @@ class PageContent extends React.Component {
     super(props);
     this.state = {
       hardwareServers: [],
-      tomcatServers: [],
       databases: [],
       selectedHardwareKeys: [],
       targetHardwareKeys: [],
       hardwareModalVisible: false,
-      selectedTomcatKeys: [],
-      targetTomcatKeys: [],
-      tomcatModalVisible: false,
       selectedMySQLKeys: [],
       targetMySQLKeys: [],
       mysqlModalVisible: false,
-      hardwareCpu: '0',
-      hardwareThread: '0',
-      hardwareMemory: '0',
-      hardwareNetwork: '0',
-      hardwareIo: '0',
-      hardwareDisk: '0',
-      tomcatThread: '0',
-      tomcatSession: '0',
-      mysqlConnections: '0',
-      mysqlSelect: '0',
-      mysqlUpdate: '0',
-      mysqlDelete: '0',
-      mysqlInsert: '0'
+      hardwareCpu: 0,
+      hardwareThread: 0,
+      hardwareMemory: 0,
+      hardwareNetwork: 0,
+      hardwareIo: 0,
+      hardwareDisk: 0,
+      mysqlConnections: 0,
+      mysqlSelect: 0,
+      mysqlUpdate: 0,
+      mysqlDelete: 0,
+      mysqlInsert: 0
     };
   };
 
@@ -60,26 +54,6 @@ class PageContent extends React.Component {
     this.setState({ selectedHardwareKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
   };
 
-  showTomcatModal = () => {
-    let tempState = Object.assign({}, this.state);
-    tempState.tomcatModalVisible = true;
-    this.setState(tempState);
-  };
-
-  hideTomcatModal = () => {
-    let tempState = Object.assign({}, this.state);
-    tempState.tomcatModalVisible = false;
-    this.setState(tempState);
-  };
-
-  handleTomcatChange = (nextTargetKeys, direction, moveKeys) => {
-    this.setState({ targetTomcatKeys: nextTargetKeys });
-  };
-
-  handleTomcatSelectChange = (sourceSelectedKeys, targetSelectedKeys) => {
-    this.setState({ selectedTomcatKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
-  };
-
   showMySQLModal = () => {
     let tempState = Object.assign({}, this.state);
     tempState.mysqlModalVisible = true;
@@ -100,106 +74,170 @@ class PageContent extends React.Component {
     this.setState({ selectedMySQLKeys: [...sourceSelectedKeys, ...targetSelectedKeys] });
   };
 
-  onInputChange = (event) => {
+  onCpuChange = (value) => {
     let tempState = Object.assign({}, this.state);
-    switch (event.target.id) {
-      case 'hardware-cpu':
-        tempState.hardwareCpu = event.target.value;
-        break;
-      case 'hardware-thread':
-        tempState.hardwareThread = event.target.value;
-        break;
-      case 'hardware-memory':
-        tempState.hardwareMemory = event.target.value;
-        break;
-      case 'hardware-disk':
-        tempState.hardwareDisk = event.target.value;
-        break;
-      case 'hardware-io':
-        tempState.hardwareIo = event.target.value;
-        break;
-      case 'hardware-network':
-        tempState.hardwareNetwork = event.target.value;
-        break;
-      case 'tomcat-thread':
-        tempState.tomcatThread = event.target.value;
-        break;
-      case 'tomcat-session':
-        tempState.tomcatSession = event.target.value;
-        break;
-      case 'mysql-connections':
-        tempState.mysqlConnections = event.target.value;
-        break;
-      case 'mysql-select':
-        tempState.mysqlSelect = event.target.value;
-        break;
-      case 'mysql-update':
-        tempState.mysqlUpdate = event.target.value;
-        break;
-      case 'mysql-insert':
-        tempState.mysqlInsert = event.target.value;
-        break;
-      case 'mysql-delete':
-        tempState.mysqlDelete = event.target.value;
-        break;
+    tempState.hardwareCpu = value;
+    if (!value) {
+      tempState.hardwareCpu = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onThreadChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.hardwareThread = value;
+    if (!value) {
+      tempState.hardwareThread = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onDiskChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.hardwareDisk = value;
+    if (!value) {
+      tempState.hardwareDisk = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onIoChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.hardwareIo = value;
+    if (!value) {
+      tempState.hardwareIo = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onMemoryChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.hardwareMemory = value;
+    if (!value) {
+      tempState.hardwareMemory = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onNetworkChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.hardwareNetwork = value;
+    if (!value) {
+      tempState.hardwareNetwork = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onConnectionChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.mysqlConnections = value;
+    if (!value) {
+      tempState.mysqlConnections = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onSelectChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.mysqlSelect = value;
+    if (!value) {
+      tempState.mysqlSelect = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onUpdateChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.mysqlUpdate = value;
+    if (!value) {
+      tempState.mysqlUpdate = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onInsertChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.mysqlInsert = value;
+    if (!value) {
+      tempState.mysqlInsert = 0;
+    }
+    this.setState(tempState);
+  };
+
+  onDeleteChange = (value) => {
+    let tempState = Object.assign({}, this.state);
+    tempState.mysqlDelete = value;
+    if (!value) {
+      tempState.mysqlDelete = 0;
     }
     this.setState(tempState);
   };
 
   handleHardwareSubmit = () => {
-    let cpu = this.state.hardwareCpu;
-    let thread = this.state.hardwareThread;
-    let disk = this.state.hardwareDisk;
-    let io = this.state.hardwareIo;
-    let memory = this.state.hardwareMemory;
-    let network = this.state.hardwareNetwork;
-    let threshold = {
-      cpu: cpu,
-      thread: thread,
-      disk: disk,
-      io: io,
-      memory: memory,
-      network: network
-    };
     let hardwareServers = [];
     this.state.targetHardwareKeys.forEach(key => {
       hardwareServers.push(this.state.hardwareServers[key].title)
     });
-    this.postData('hardware', hardwareServers, threshold);
-  };
-
-  handleTomcatSubmit = () => {
-    let thread = this.state.tomcatThread;
-    let session = this.state.tomcatSession;
-    let threshold = {
-      thread: thread,
-      session: session
-    };
-    let tomcatServers = [];
-    this.state.targetTomcatKeys.forEach(key => {
-      tomcatServers.push(this.state.tomcatServers[key].title);
-    });
-    this.postData('tomcat', tomcatServers, threshold);
+    if (hardwareServers.length) {
+      let cpu = this.state.hardwareCpu;
+      let thread = this.state.hardwareThread;
+      let disk = this.state.hardwareDisk;
+      let io = this.state.hardwareIo;
+      let memory = this.state.hardwareMemory;
+      let network = this.state.hardwareNetwork;
+      let threshold = {
+        cpu: cpu,
+        thread: thread,
+        disk: disk,
+        io: io,
+        memory: memory,
+        network: network
+      };
+      this.postData('hardware', hardwareServers, threshold);
+      let tempState = Object.assign({}, this.state);
+      tempState.hardwareCpu = 0;
+      tempState.hardwareThread = 0;
+      tempState.hardwareDisk = 0;
+      tempState.hardwareIo = 0;
+      tempState.hardwareMemory = 0;
+      tempState.hardwareNetwork = 0;
+      tempState.targetHardwareKeys = [];
+      this.setState(tempState);
+    } else {
+      message.warning('未添加服务器~');
+    }
   };
 
   handleMySQLSubmit = () => {
-    let connections = this.state.mysqlConnections;
-    let select = this.state.mysqlSelect;
-    let insert = this.state.mysqlInsert;
-    let update = this.state.mysqlUpdate;
-    let del = this.state.mysqlDelete;
-    let threshold = {
-      connections: connections,
-      select: select,
-      insert: insert,
-      update: update,
-      delete: del
-    };
     let databases = [];
     this.state.targetMySQLKeys.forEach(key => {
       databases.push(this.state.databases[key].title);
     });
-    this.postData('mysql', databases, threshold);
+    if (databases.length) {
+      let connections = this.state.mysqlConnections;
+      let select = this.state.mysqlSelect;
+      let insert = this.state.mysqlInsert;
+      let update = this.state.mysqlUpdate;
+      let del = this.state.mysqlDelete;
+      let threshold = {
+        connections: connections,
+        select: select,
+        insert: insert,
+        update: update,
+        delete: del
+      };
+      this.postData('mysql', databases, threshold);
+      let tempState = Object.assign({}, this.state);
+      tempState.mysqlConnections = 0;
+      tempState.mysqlInsert = 0;
+      tempState.mysqlSelect = 0;
+      tempState.mysqlUpdate = 0;
+      tempState.mysqlDelete = 0;
+      tempState.targetMySQLKeys = [];
+      this.setState(tempState);
+    } else {
+      message.warning('未添加数据库~');
+    }
   };
 
   postData = (type, names, threshold) => {
@@ -244,12 +282,6 @@ class PageContent extends React.Component {
               title: responseResult.data.mysql[i]
             });
           }
-          for (let i = 0; i < responseResult.data.tomcat.length; i++) {
-            tempState.tomcatServers.push({
-              key: i.toString(),
-              title: responseResult.data.tomcat[i]
-            });
-          }
           _self.setState(tempState);
         } else {
           message.error(responseResult.message);
@@ -259,7 +291,6 @@ class PageContent extends React.Component {
   };
 
   render() {
-
     const formItemLayout = {
       labelCol: { span: 2 },
       wrapperCol: { span: 5 }
@@ -286,37 +317,37 @@ class PageContent extends React.Component {
               {...formItemLayout}
               className="antd-form-item"
               label="CPU利用率">
-              <Input id="hardware-cpu" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} max={1} step={0.1} value={this.state.hardwareCpu} onChange={this.onCpuChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="线程数">
-              <Input id="hardware-thread" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} step={100} value={this.state.hardwareThread} onChange={this.onThreadChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="网络传输速率">
-              <Input id="hardware-network" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} max={1} step={0.1} value={this.state.hardwareNetwork} onChange={this.onNetworkChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="IO读写速率">
-              <Input id="hardware-io" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} max={1} step={0.1} value={this.state.hardwareIo} onChange={this.onIoChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="内存空闲比例">
-              <Input id="hardware-memory" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} max={1} step={0.1} value={this.state.hardwareMemory} onChange={this.onMemoryChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="磁盘占用比例">
-              <Input id="hardware-disk" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} max={1} step={0.1} value={this.state.hardwareDisk} onChange={this.onDiskChange} />
             </FormItem>
             <FormItem {...formItemLayoutWithOutLabel} className="antd-form-item">
               <Button className="plus-button" type="primary" size="small" onClick={this.showHardwareModal}>
@@ -348,81 +379,37 @@ class PageContent extends React.Component {
             />
           </Modal>
         </TabPane>
-        <TabPane tab="Tomcat" key="2">
-          <Form layout="inline" onSubmit={this.handleTomcatSubmit}>
-            <FormItem
-              {...formItemLayout}
-              className="antd-form-item"
-              label="繁忙线程数">
-              <Input id="=tomcat-thread" onChange={this.onInputChange} />
-            </FormItem>
-            <FormItem
-              {...formItemLayout}
-              className="antd-form-item"
-              label="活跃Session">
-              <Input id="tomcat-session" onChange={this.onInputChange} />
-            </FormItem>
-            <FormItem {...formItemLayoutWithOutLabel} className="antd-form-item">
-              <Button className="plus-button" type="primary" size="small" onClick={this.showTomcatModal}>
-                <Icon type="plus" />添加/删除服务器
-              </Button>
-            </FormItem>
-            {this.state.targetTomcatKeys.length ?
-              <FormItem {...formItemLayoutWithTags} className="antd-form-item">
-                {this.state.targetTomcatKeys.map(index => {
-                  return (<Tag key={index}>{this.state.tomcatServers[index].title}</Tag>);
-                })}
-              </FormItem> : ''}
-            <FormItem {...formItemLayoutWithOutLabel} className="antd-form-item">
-              <Button className="setting-submit" type="primary" htmlType="submit" size="default">提交</Button>
-            </FormItem>
-          </Form>
-          <Modal title="Tomcat服务器列表"
-            visible={this.state.tomcatModalVisible}
-            onOk={() => this.hideTomcatModal()}
-            onCancel={() => this.hideTomcatModal()} >
-            <Transfer
-              dataSource={this.state.tomcatServers}
-              titles={['未选择', '已选择']}
-              targetKeys={this.state.targetTomcatKeys}
-              selectedKeys={this.state.selectedTomcatKeys}
-              onChange={this.handleTomcatChange}
-              onSelectChange={this.handleTomcatSelectChange}
-              render={item => item.title}
-            />
-          </Modal>
-        </TabPane>
-        <TabPane tab="MySQL" key="3">
+        <TabPane tab="MySQL" key="2">
           <Form layout="inline" onSubmit={this.handleMySQLSubmit}>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="连接数">
-              <Input id="mysql-connections" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} step={100} value={this.state.mysqlConnections} onChange={this.onConnectionChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="Select">
-              <Input id="mysql-select" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} step={100} value={this.state.mysqlSelect} onChange={this.onSelectChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="Update">
-              <Input id="mysql-update" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} step={100} value={this.state.mysqlUpdate} onChange={this.onUpdateChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="Delete">
-              <Input id="mysql-delete" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} step={100} value={this.state.mysqlDelete} onChange={this.onDeleteChange} />
             </FormItem>
             <FormItem
               {...formItemLayout}
               className="antd-form-item"
               label="Insert">
-              <Input id="mysql-insert" onChange={this.onInputChange} />
+              <InputNumber className="setting-input-num" min={0} step={100} value={this.state.mysqlInsert} onChange={this.onInsertChange} />
             </FormItem>
             <FormItem {...formItemLayoutWithOutLabel} className="antd-form-item">
               <Button className="plus-button" type="primary" size="small" onClick={this.showMySQLModal}>

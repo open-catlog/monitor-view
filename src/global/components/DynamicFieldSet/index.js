@@ -49,7 +49,7 @@ class DynamicFieldSet extends React.Component {
       response: (err, res) => {
         let responseResult = JSON.parse(res.text);
         if (responseResult.success) {
-          message.info('设置成功');
+          message.info('设置成功，请刷新页面');
         } else {
           message.error(responseResult.message);
         }
@@ -99,7 +99,6 @@ class DynamicFieldSet extends React.Component {
         }
       }
     });
-    window.location.reload();
   }
 
   render() {
