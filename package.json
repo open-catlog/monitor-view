@@ -4,7 +4,8 @@
   "description": "monitor-view",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dev-server --hot --port=3456 --inline --history-api-fallback --progress"
+    "dev": "webpack-dev-server --hot --port=3456 --inline --history-api-fallback --progress",
+    "uitest": "macaca run -d ./test -p 3457 --verbose"
   },
   "author": "zhuyali",
   "license": "MIT",
@@ -33,8 +34,12 @@
     "url-loader": "^0.5.7"
   },
   "devDependencies": {
-    "webpack": "^1.14.0",
-    "babel-plugin-import": "^1.1.0"
+    "babel-plugin-import": "^1.1.0",
+    "macaca-cli": "^1.2.2",
+    "macaca-electron": "^1.1.6",
+    "mocha": "^3.3.0",
+    "should": "^11.2.1",
+    "webpack": "^1.14.0"
   },
   "repository": {
     "type": "git",

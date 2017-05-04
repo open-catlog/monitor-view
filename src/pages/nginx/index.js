@@ -21,8 +21,8 @@ class PageContent extends React.Component {
       tableData: [],
       tableVisible: true,
       chartVisible: false,
-      defaultDomain: 'shop.showjoy.com',
-      currentDomain: 'shop.showjoy.com',
+      defaultDomain: 'shop.m.showjoy.com',
+      currentDomain: 'shop.m.showjoy.com',
       charts: {}
     };
   };
