@@ -204,16 +204,15 @@ class Default extends React.Component {
         return (
             <div id="map">
                 <Row type='flex' justify='center'>
-                    <Col span={22}>
+                    <Col span={22} className='map-container'>
                         <div>
                             <DatePicker
                                 defaultValue={moment()}
                                 format="YYYY-MM-DD"
                                 disabledDate={this.disabledDate}
-                                onChange={(date, dateString) => this.onDateChange(date, dateString)}
-                            />
+                                onChange={(date, dateString) => this.onDateChange(date, dateString)} />
                         </div>
-                        <Col span={24}><div id='map-chart' /></Col>
+                        <Col span={24} className='map-container' ><div id='map-chart' /></Col>
                     </Col>
                 </Row>
             </div>

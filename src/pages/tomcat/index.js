@@ -210,6 +210,7 @@ class PageContent extends React.Component {
             <InputNumber 
               defaultValue={this.state.defaultSeconds}
               min={1}
+              step={60}
               formatter={value => `${value}秒`}
               parser={value => value.replace('秒', '')}
               onChange={this.onChange} />
