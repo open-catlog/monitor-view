@@ -222,4 +222,3 @@ describe('Macaca UI Test', function () {
       .quit();
   });
 });
-

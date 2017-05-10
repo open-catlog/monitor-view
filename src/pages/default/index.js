@@ -28,6 +28,11 @@ var option = {
         data: ['UV', 'PV'],
         textStyle: {
             color: '#D9D9D9'
+        },
+        selectedMode: 'single', 
+        selected: {
+            'UV': true,
+            'PV': false
         }
     },
     visualMap: {
