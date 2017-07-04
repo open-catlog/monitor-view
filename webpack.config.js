@@ -5,13 +5,13 @@ var webpack = require('webpack');
 
 var config = {
   entry: [
-    'webpack/hot/only-dev-server',
+    // 'webpack/hot/only-dev-server',
     './index.js'
   ],
   output: {
-    // path: path.join('/Users/julia/prjs/monitor-server', '/build/src/pages'),
-    // publicPath: './build/src/pages/',
-    path: './build/src/pages',
+    path: path.join('/Users/julia/prjs/monitor-server', '/build/src/pages'),
+    publicPath: './build/src/pages/',
+    // path: './build/src/pages',
     filename: 'build.js'
   },
   resolve: {

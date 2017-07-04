@@ -17,8 +17,8 @@ class PageContent extends React.Component {
     this.state = {
       server: 'offline',
       databases: [],
-      defaultDatabase: 'shop',
-      currentDatabase: 'shop',
+      defaultDatabase: 'a',
+      currentDatabase: 'a',
       defaultSeconds: 600,
       currentSeconds: 600
     };

@@ -175,9 +175,13 @@ class PageContent extends React.Component {
 
   handleHardwareSubmit = () => {
     let hardwareServers = [];
-    this.state.targetHardwareKeys.forEach(key => {
-      hardwareServers.push(this.state.hardwareServers[key].title)
-    });
+
+    if (this.state.targetHardwareKeys.length) {
+      this.state.targetHardwareKeys.forEach(key => {
+        hardwareServers.push(this.state.hardwareServers[key].title)
+      });
+    }
+
     if (hardwareServers.length) {
       let cpu = this.state.hardwareCpu;
       let thread = this.state.hardwareThread;
@@ -210,9 +214,13 @@ class PageContent extends React.Component {
 
   handleMySQLSubmit = () => {
     let databases = [];
-    this.state.targetMySQLKeys.forEach(key => {
-      databases.push(this.state.databases[key].title);
-    });
+
+    if (this.state.targetMySQLKeys.length) {
+      this.state.targetMySQLKeys.forEach(key => {
+        databases.push(this.state.databases[key].title);
+      });
+    }
+
     if (databases.length) {
       let connections = this.state.mysqlConnections;
       let select = this.state.mysqlSelect;

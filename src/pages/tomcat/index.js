@@ -21,8 +21,8 @@ class PageContent extends React.Component {
       startTime: '',
       uptime: '',
       sessions: [],
-      defaultServer: '192.168.0.101',
-      currentServer: '192.168.0.101',
+      defaultServer: '127.0.0.1',
+      currentServer: '127.0.0.1',
       intervalIds: [],
       defaultSeconds: 600,
       currentSeconds: 600

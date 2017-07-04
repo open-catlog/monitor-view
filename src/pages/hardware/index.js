@@ -18,8 +18,8 @@ class PageContent extends React.Component {
     super(props);
     this.state = {
       servers: [],
-      defaultServer: '192.168.0.128',
-      currentServer: '192.168.0.128',
+      defaultServer: '127.0.0.1',
+      currentServer: '127.0.0.1',
       intervalIds: [],
       defaultSeconds: 600,
       currentSeconds: 600
